@@ -1,0 +1,6 @@
+@EcoRide.Server_HostAddress = http://localhost:5276
+
+GET {{EcoRide.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
