@@ -1,14 +1,55 @@
-﻿:host {
+:host {
     max-width: 1280px;
     padding: 2rem;
     text-align: center;
 }
 
-th, td {
-    padding-left: 1rem;
-    padding-right: 1rem;
+/* Style général du header */
+#app-header {
+  border: double;
+  background-color: lightgreen;
+  padding: 10px 20px;
 }
 
-table {
-    margin: 0 auto;
+  /* Mettre le nav en flex, avec espace entre logo et liens */
+  #app-header nav.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+/* Logo à gauche */
+.navbar-brand {
+  display: flex;
+  align-items: center;
 }
+
+/* Taille du logo */
+.nav-logo {
+  height: auto;
+  width: 60px;
+}
+
+/* Conteneur des liens et boutons, alignés sur une même ligne */
+#app-header nav.navbar > a.link,
+#app-header nav.navbar > button.connexion {
+  margin-left: 20px;
+}
+
+/* On met nav en flex aussi pour que liens et boutons soient alignés */
+#app-header nav.navbar > a.link,
+#app-header nav.navbar > button.connexion {
+  display: inline-flex;
+  align-items: center;
+}
+
+a.link {
+  text-decoration: none;
+  color: black;
+  cursor: pointer;
+}
+
+button.connexion {
+  cursor: pointer;
+}
+
