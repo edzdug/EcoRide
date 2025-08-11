@@ -1,0 +1,24 @@
+:host {
+  max-width: 1280px;
+  padding: 2rem;
+  text-align: center;
+}
+
+.presentation {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 100px;
+  max-width: 800px;
+  margin: auto;
+  text-align: center;
+  justify-content: center;
+}
+
+.image {
+  min-width: 400px;
+  height: auto;
+}
+
+.text {
+  justify-items: center;
+}
