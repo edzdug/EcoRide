@@ -6,12 +6,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AccueilComponent } from './accueil/accueil.component';
 import { ItineraireformComponent } from './itineraireform/itineraireform.component';
+import { ItinerairevueComponent } from './itinerairevue/itinerairevue.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     AccueilComponent,
-    ItineraireformComponent
+    ItineraireformComponent,
+    ItinerairevueComponent
   ],
   imports: [
     BrowserModule, HttpClientModule,
