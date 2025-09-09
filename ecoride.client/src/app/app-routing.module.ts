@@ -4,12 +4,14 @@ import { AppComponent } from './app.component';
 import { AccueilComponent } from './accueil/accueil.component';
 import { ItineraireformComponent } from './itineraireform/itineraireform.component';
 import { ItinerairevueComponent } from './itinerairevue/itinerairevue.component';
+import { InscriptionComponent } from './inscription/inscription.component';
 
 const routes: Routes = [
   { path: 'home', component: AppComponent },
   { path: 'accueil', component: AccueilComponent },
   { path: 'itineraireform', component: ItineraireformComponent },
   { path: 'itinerairevue', component: ItinerairevueComponent },
+  { path: 'inscription', component: InscriptionComponent },
   { path: '', redirectTo: '/accueil', pathMatch: 'full' } // Redirige vers la page1 par défaut];
 ];
 

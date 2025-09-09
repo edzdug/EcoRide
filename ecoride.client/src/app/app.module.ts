@@ -7,13 +7,15 @@ import { AppComponent } from './app.component';
 import { AccueilComponent } from './accueil/accueil.component';
 import { ItineraireformComponent } from './itineraireform/itineraireform.component';
 import { ItinerairevueComponent } from './itinerairevue/itinerairevue.component';
+import { InscriptionComponent } from './inscription/inscription.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     AccueilComponent,
     ItineraireformComponent,
-    ItinerairevueComponent
+    ItinerairevueComponent,
+    InscriptionComponent
   ],
   imports: [
     BrowserModule, HttpClientModule,

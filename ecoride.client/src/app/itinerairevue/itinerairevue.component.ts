@@ -1,5 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { FormDataService } from '../itineraireform/itineraireform.component';
+import { Time } from '@angular/common';
+
+interface Covoiturage
+{
+          Id?: number;
+          DateDepart: Date;
+          heureDepart: Date;
+          LieuDepart: string;
+          DateArrivee: Date;
+          heureArrivee: string;
+          LieuArrivee: string;
+          Statut?: string;
+          NbPlace: number;
+          PrixPersonne: number;
+}
 
 @Component({
   selector: 'app-itinerairevue',
