@@ -1,0 +1,8 @@
+<p>itinerairevue works!</p>
+
+<div *ngIf="form">
+  <h3>Résumé de l'itinéraire</h3>
+  <p><strong>Départ :</strong> {{ form.depart }}</p>
+  <p><strong>Destination :</strong> {{ form.destination }}</p>
+  <p><strong>Date :</strong> {{ form.date | date }}</p>
+</div>
