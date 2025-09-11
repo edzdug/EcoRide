@@ -1,0 +1,74 @@
+<div style="display: flex; justify-content: center;">
+  <div class="card h-100 mb-4" style="min-width: 400px; max-width: 700px; width: 100%;">
+    <div class="card-header pb-0">
+      <strong>Formulaire</strong>
+    </div>
+
+    <br />
+    <br />
+
+    <div class="card-body">
+
+      <div class="mb-3">
+        <a [routerLink]="['/accueil']">Retour à la page précédente</a>
+      </div>
+
+      <br />
+      <br />
+
+      <form (ngSubmit)="envoie()">
+
+        <div class="mb-3">
+          <label for="nom" class="form-label">Nom</label>
+          <input type="text" id="nom" [(ngModel)]="form.nom" name="depart" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+          <label for="prenom" class="form-label">Prénom</label>
+          <input type="text" id="prenom" [(ngModel)]="form.prenom" name="destination" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input type="text" id="email" [(ngModel)]="form.email" name="email" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+          <label for="password" class="form-label">Mot de passe</label>
+          <input type="text" id="password" [(ngModel)]="form.password" name="password" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+          <label for="telephone" class="form-label">Numéro de téléphone</label>
+          <input type="text" id="telephone" [(ngModel)]="form.telephone" name="telephone" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+          <label for="adresse" class="form-label">Adresse</label>
+          <input type="text" id="adresse" [(ngModel)]="form.adresse" name="adresse" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+          <label for="dateNaissance" class="form-label">Date de naissance</label>
+          <input type="text" id="dateNaissance" [(ngModel)]="form.dateNaissance" name="dateNaissance" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+          <label for="photo" class="form-label">Photo</label>
+          <input type="text" id="photo" [(ngModel)]="form.photo" name="photo" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+          <label for="pseudo" class="form-label">Pseudonyme</label>
+          <input type="text" id="pseudo" [(ngModel)]="form.pseudo" name="pseudo" class="form-control" required />
+        </div>
+
+        <br />
+        <br />
+
+        <button type="submit" class="btn btn-primary">Envoie</button>
+      </form>
+    </div>
+  </div>
+</div>
+
