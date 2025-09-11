@@ -6,13 +6,13 @@ namespace EcoRide.Server.Model
     {
         public int? Id { get; set; }
 
-        public DateOnly DateDepart { get; set; }
+        public DateTime DateDepart { get; set; }
 
         public TimeOnly HeureDepart { get; set; }
 
         public string LieuDepart { get; set; }
 
-        public DateOnly DateArrivee { get; set; }
+        public string DateArrivee { get; set; }
 
         public string HeureArrivee { get; set; }
 

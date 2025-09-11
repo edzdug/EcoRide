@@ -4,3 +4,8 @@ GET {{EcoRide.Server_HostAddress}}/Itineraire/
 Accept: application/json
 
 ###
+
+GET {{EcoRide.Server_HostAddress}}/Covoiturage/
+Accept: application/json
+
+###

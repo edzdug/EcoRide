@@ -1,7 +1,5 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
 
 type Form = {
   depart: string;
@@ -29,7 +27,6 @@ export class FormDataService {
   styleUrls: ['./itineraireform.component.css']
 })
 export class ItineraireformComponent {
-  private apiUrl = 'http://localhost:5000/api/covoiturage';
 
   form: Form = {
     depart: 'Paris',
@@ -38,18 +35,15 @@ export class ItineraireformComponent {
   };
 
   constructor(
-    private http: HttpClient,
     private router: Router,                      
     private formDataService: FormDataService     
   ) { }
 
   async envoie() {
     this.formDataService.setForm(this.form);     
-    this.router.navigate(['/resultat']);         
+    this.router.navigate(['/itinerairevue']);         
   }
 
-  getAll(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl);
-  }
+  
 
 }

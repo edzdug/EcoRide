@@ -26,10 +26,10 @@ public class CovoiturageService
             covoiturages.Add(new covoiturage
             {
                 Id = Convert.ToInt32(reader["covoiturage id"]),
-                DateDepart = DateOnly.FromDateTime(Convert.ToDateTime(reader["date_depart"])),
+                DateDepart = Convert.ToDateTime(reader["date_depart"]),
                 HeureDepart = TimeOnly.FromDateTime(Convert.ToDateTime(reader["heure_depart"])),
                 LieuDepart = reader["lieu_depart"].ToString(),
-                DateArrivee = DateOnly.FromDateTime(Convert.ToDateTime(reader["date_arrivee"])),
+                DateArrivee = reader["date_arrivee"].ToString(),
                 HeureArrivee = reader["heure_arrivee"].ToString(),
                 LieuArrivee = reader["lieu_arrivee"].ToString(),
                 Statut = reader["statut"] as string,
