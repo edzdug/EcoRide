@@ -76,10 +76,10 @@ namespace EcoRide.Server.Controllers
         }
 
         [HttpGet("GetItiniraireAll")]
-        public async Task<IActionResult> GetAll()
+        public async Task<ActionResult<IEnumerable<covoiturage>>> GetAll()
         {
             var result = await _service.GetAllAsync();
-            return Ok(result);
+            return result.ToList();
         }
     }
 }
