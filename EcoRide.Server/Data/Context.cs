@@ -13,7 +13,8 @@ namespace EcoRide.Server.Data
         }
 
         // Exemple de table
-        public DbSet<covoiturage> covoiturage { get; set; }
+        public DbSet<Covoiturage> covoiturage { get; set; }
+        public DbSet<Utilisateur> utilisateur { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             var connectionString = "server=localhost;database=ecoride;user=root;password=aON8hSy_GeS;";

@@ -45,7 +45,7 @@ namespace EcoRide.Server.Controllers
         }
 
         [HttpGet("GetItiniraireAll")]
-        public async Task<ActionResult<IEnumerable<covoiturage>>> Get()
+        public async Task<ActionResult<IEnumerable<Covoiturage>>> Get()
         {
             /*
             return Enumerable.Range(1, 5).Select(index => new Covoiturage
@@ -76,10 +76,31 @@ namespace EcoRide.Server.Controllers
         }
 
         [HttpGet("GetItiniraireAll")]
-        public async Task<ActionResult<IEnumerable<covoiturage>>> GetAll()
+        public async Task<ActionResult<IEnumerable<Covoiturage>>> GetAll()
         {
             var result = await _service.GetAllAsync();
             return result.ToList();
         }
     }
+
+    [ApiController]
+    [Route("api/[controller]")]
+    public class UtilisateurController : ControllerBase
+    {
+        private readonly UtilisateurService _service;
+
+        public UtilisateurController(UtilisateurService service)
+        {
+            _service = service;
+        }
+
+        [HttpGet("GetUtilisateurAll")]
+        public async Task<ActionResult<IEnumerable<Utilisateur>>> GetAll()
+        {
+            var result = await _service.GetAllAsync();
+            return result.ToList();
+        }
+    }
+
+
 }

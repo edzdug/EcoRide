@@ -1,8 +1,17 @@
-<p>itinerairevue works!</p>
-
-<div *ngIf="form">
-  <h3>Résumé de l'itinéraire</h3>
-  <p><strong>Départ :</strong> {{ form.depart }}</p>
-  <p><strong>Destination :</strong> {{ form.destination }}</p>
-  <p><strong>Date :</strong> {{ form.date | date }}</p>
+<div *ngIf="filteredCovoiturages.length === 0">
+  Aucun covoiturage trouvé.
 </div>
+
+<ul *ngIf="filteredCovoiturages.length > 0">
+  <li *ngFor="let covoiturage of filteredCovoiturages">
+    <strong>De :</strong> {{ covoiturage.lieuDepart }} <br />
+    <strong>À :</strong> {{ covoiturage.lieuArrivee }} <br />
+    <strong>Date :</strong> {{ covoiturage.dateDepart | date:'shortDate' }} <br />
+    <strong>Heure départ :</strong> {{ covoiturage.heureDepart }} <br />
+    <strong>Heure arrivée :</strong> {{ covoiturage.heureArrivee }} <br />
+    <strong>Statut :</strong> {{ covoiturage.statut }} <br />
+    <strong>Places :</strong> {{ covoiturage.nbPlace }} <br />
+    <strong>Prix :</strong> {{ covoiturage.prixPersonne }} €
+    <hr />
+  </li>
+</ul>

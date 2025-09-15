@@ -2,7 +2,7 @@ using System.Reflection.Metadata;
 
 namespace EcoRide.Server.Model
 {
-    public class covoiturage
+    public class Covoiturage
     {
         public int? Id { get; set; }
 
@@ -43,7 +43,7 @@ namespace EcoRide.Server.Model
 
         public string DateNaissance { get; set; }
 
-        public Blob Photo { get; set; }
+        public byte[] Photo { get; set; }
 
         public string Pseudo { get; set; }
     }
