@@ -11,9 +11,9 @@ public class CovoiturageService
         _connectionString = configuration.GetConnectionString("DefaultConnection");
     }
 
-    public async Task<List<covoiturage>> GetAllAsync()
+    public async Task<List<Covoiturage>> GetAllAsync()
     {
-        var covoiturages = new List<covoiturage>();
+        var covoiturages = new List<Covoiturage>();
 
         using var connection = new MySqlConnection(_connectionString);
         await connection.OpenAsync();
@@ -23,7 +23,7 @@ public class CovoiturageService
 
         while (await reader.ReadAsync())
         {
-            covoiturages.Add(new covoiturage
+            covoiturages.Add(new Covoiturage
             {
                 Id = Convert.ToInt32(reader["covoiturage id"]),
                 DateDepart = Convert.ToDateTime(reader["date_depart"]),
