@@ -53,9 +53,38 @@ export class InscriptionComponent {
   ) { }
 
   async envoie() {
-    this.formDataService.setForm(this.form);
-    this.router.navigate(['/resultat']);
+    if (this.form.photo) {
+      const base64Photo = await blobToBase64(this.form.photo);
+      const utilisateurToSend = { ...this.form, photo: base64Photo };
+      this.http.post('/api/utilisateur', utilisateurToSend).subscribe(response => {
+        console.log("Utilisateur créé :", response);
+      });
+    } else {
+      this.http.post('/api/utilisateur', this.form).subscribe(response => {
+        console.log("Utilisateur créé :", response);
+      });
+    }
   }
+
+
+  onFileSelected(event: any) {
+    const file: File = event.target.files[0];
+    if (file) {
+      this.form.photo = file;
+    }
+  }
+
+
+}
+function blobToBase64(blob: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = reject;
+    reader.onload = () => {
+      resolve(reader.result as string); // contient le base64
+    };
+    reader.readAsDataURL(blob); // convertit le blob en data URI base64
+  });
 }
 
 

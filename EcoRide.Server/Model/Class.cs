@@ -43,8 +43,22 @@ namespace EcoRide.Server.Model
 
         public string DateNaissance { get; set; }
 
-        public byte[] Photo { get; set; }
+        public string? Photo { get; set; }
 
         public string Pseudo { get; set; }
     }
+
+    public class UtilisateurDto
+    {
+        public int Id { get; set; }
+        public string Nom { get; set; }
+        public string Prenom { get; set; }
+        public string Email { get; set; }
+        public string Telephone { get; set; }
+        public string Adresse { get; set; }
+        public string DateNaissance { get; set; }
+        public string? Photo { get; set; }
+        public string Pseudo { get; set; }
+    }
+
 }
