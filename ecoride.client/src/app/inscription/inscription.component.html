@@ -55,7 +55,7 @@
 
         <div class="mb-3">
           <label for="photo" class="form-label">Photo</label>
-          <input type="text" id="photo" [(ngModel)]="form.photo" name="photo" class="form-control" required />
+          <input type="file" (change)="onFileSelected($event)" />
         </div>
 
         <div class="mb-3">

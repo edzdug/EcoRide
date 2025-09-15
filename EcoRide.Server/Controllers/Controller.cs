@@ -2,8 +2,9 @@ using EcoRide.Server.Data;
 using EcoRide.Server.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using MySql.Data.MySqlClient;
+using System.Data;
+using System.Linq;
 /*
 [ApiController]
 [Route("api/[controller]")]
@@ -100,7 +101,46 @@ namespace EcoRide.Server.Controllers
             var result = await _service.GetAllAsync();
             return result.ToList();
         }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Utilisateur>> GetById(int id)
+        {
+            var user = await _service.GetUtilisateurByIdAsync(id);
+            if (user == null)
+                return NotFound();
+
+            return Ok(user);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<Utilisateur>> PostAsync([FromBody] Utilisateur utilisateur)
+        {
+            if (await _service.EmailExisteAsync(utilisateur.Email))
+                return BadRequest("Cet email est déjà utilisé.");
+
+            if (await _service.PseudoExisteAsync(utilisateur.Pseudo))
+                return BadRequest("Ce pseudo est déjà utilisé.");
+
+            var insertedId = await _service.AddUtilisateurAsync(utilisateur);
+
+            var utilisateurDto = new UtilisateurDto
+            {
+                Id = insertedId,
+                Nom = utilisateur.Nom,
+                Prenom = utilisateur.Prenom,
+                Email = utilisateur.Email,
+                Telephone = utilisateur.Telephone,
+                Adresse = utilisateur.Adresse,
+                DateNaissance = utilisateur.DateNaissance,
+                Photo = utilisateur.Photo,
+                Pseudo = utilisateur.Pseudo
+            };
+
+            // CreatedAtAction nécessite que tu aies une méthode "GetById" accessible
+            return CreatedAtAction(nameof(GetById), new { id = insertedId }, utilisateurDto);
+
+        }
     }
 
-
+    
 }
