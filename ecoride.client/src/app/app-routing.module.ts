@@ -5,13 +5,17 @@ import { AccueilComponent } from './accueil/accueil.component';
 import { ItineraireformComponent } from './itineraireform/itineraireform.component';
 import { ItinerairevueComponent } from './itinerairevue/itinerairevue.component';
 import { InscriptionComponent } from './inscription/inscription.component';
+import { AuthentificationComponent } from './authentification/authentification.component'
+import { AuthGuard } from './authentification/auth.guard';
 
 const routes: Routes = [
   { path: 'home', component: AppComponent },
+  //{ path: 'accueil', component: AccueilComponent, canActivate: [AuthGuard] },
   { path: 'accueil', component: AccueilComponent },
   { path: 'itineraireform', component: ItineraireformComponent },
   { path: 'itinerairevue', component: ItinerairevueComponent },
   { path: 'inscription', component: InscriptionComponent },
+  { path: 'login', component: AuthentificationComponent },
   { path: '', redirectTo: '/accueil', pathMatch: 'full' } // Redirige vers la page1 par défaut];
 ];
 

@@ -1,5 +1,6 @@
 using EcoRide.Server.Data;
 using EcoRide.Server.Model;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MySql.Data.MySqlClient;
@@ -141,6 +142,49 @@ namespace EcoRide.Server.Controllers
 
         }
     }
-
     
+    [ApiController]
+    [Route("api/[controller]")]
+    public class AuthentificationController : ControllerBase
+    {
+        private readonly JwtService _jwtService;
+        private readonly UtilisateurService _service;
+
+        public AuthentificationController(UtilisateurService service , JwtService jwtService)
+        {
+            _service = service;
+            _jwtService = jwtService;
+        }
+
+        [HttpPost("login")]
+        public async Task<ActionResult<LoginResponse>> Login([FromBody] LoginRequest request)
+        {
+            var utilisateur = await _service.GetUtilisateurByEmailAsync(request.Email);
+            if (utilisateur == null)
+                return Unauthorized("Email ou mot de passe incorrect");
+
+            bool isPasswordValid = BCrypt.Net.BCrypt.Verify(request.Password, utilisateur.Password);
+            if (!isPasswordValid)
+                return Unauthorized("Email ou mot de passe incorrect");
+
+            var token = _jwtService.GenerateToken(utilisateur); // méthode pour générer JWT
+
+            return Ok(new LoginResponse { Token = token, User = utilisateur });
+        }
+
+        public class LoginRequest
+        {
+            public string Email { get; set; }
+            public string Password { get; set; }
+        }
+
+        public class LoginResponse
+        {
+            public string Token { get; set; }
+            public Utilisateur User { get; set; }
+        }
+
+    }
+    
+
 }

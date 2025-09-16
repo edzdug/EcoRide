@@ -19,6 +19,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<CovoiturageService>();
 builder.Services.AddScoped<UtilisateurService>();
 
+builder.Services.AddSingleton<JwtService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

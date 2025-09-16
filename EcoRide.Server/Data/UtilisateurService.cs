@@ -148,5 +148,34 @@ public class UtilisateurService
         return count > 0;
     }
 
+    public async Task<Utilisateur?> GetUtilisateurByEmailAsync(string email)
+    {
+        using var connection = new MySqlConnection(_connectionString);
+        await connection.OpenAsync();
+
+        var command = new MySqlCommand("SELECT * FROM utilisateur WHERE email = @Email", connection);
+        command.Parameters.AddWithValue("@Email", email);
+
+        using var reader = await command.ExecuteReaderAsync();
+
+        if (await reader.ReadAsync())
+        {
+            return new Utilisateur
+            {
+                Id = reader.GetInt32("utilisateur_id"),
+                Nom = reader.GetString("nom"),
+                Prenom = reader.GetString("prenom"),
+                Email = reader.GetString("email"),
+                Password = reader.GetString("password"),
+                Telephone = reader.GetString("telephone"),
+                Adresse = reader.GetString("adresse"),
+                DateNaissance = reader.GetString("date_naissance"),
+                Photo = reader["photo"] is DBNull ? null : Convert.ToBase64String((byte[])reader["photo"]),
+                Pseudo = reader.GetString("pseudo")
+            };
+        }
+
+        return null; // utilisateur non trouvé
+    }
 
 }
