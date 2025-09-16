@@ -3,16 +3,23 @@
     <nav class="navbar">
       <a class="navbar-brand" href="#">
         <img class="nav-logo" src="logo-ecodrive.png" />
-        <!--<span class="nav-logo-label">EcoDrive</span>-->
       </a>
       <a class="link" routerLink="/accueil">Retour à la page d'accueil</a>
       <a class="link" routerLink="/itineraireform">Accès aux covoiturage</a>
       <a class="link" routerLink="">Contact</a>
-      <button class="connexion" routerLink="">Connexion</button>
-      <button class="connexion" routerLink="/inscription">Enregistrement</button>
+
+      <!-- Si connecté -->
+      <ng-container *ngIf="authService.isLoggedIn; else notLoggedIn">
+        <button class="connexion" (click)="logout()">Déconnexion</button>
+      </ng-container>
+
+      <!-- Si pas connecté -->
+      <ng-template #notLoggedIn>
+        <button class="connexion" routerLink="/login">Connexion</button>
+        <button class="connexion" routerLink="/inscription">Enregistrement</button>
+      </ng-template>
     </nav>
   </header>
-
 
   <main>
     <router-outlet></router-outlet>

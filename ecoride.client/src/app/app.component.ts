@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService }from './authentification/auth.service';
 
 interface WeatherForecast {
   date: string;
@@ -19,7 +19,7 @@ interface WeatherForecast {
 export class AppComponent implements OnInit {
   public forecasts: WeatherForecast[] = [];
 
-  constructor(private http: HttpClient, private routes: ActivatedRoute) {}
+  constructor(private http: HttpClient, public authService: AuthService, private routes: ActivatedRoute, private router: Router) {}
 
   ngOnInit() {
     this.getForecasts();
@@ -34,6 +34,11 @@ export class AppComponent implements OnInit {
         console.error(error);
       }
     );
+  }
+
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 
   title = 'ecoride.client';
