@@ -1,0 +1,69 @@
+<h2>Bienvenue {{ user?.prenom }}</h2>
+
+<form #profilForm="ngForm" (ngSubmit)="submit()" novalidate>
+
+  <h3>Sélectionnez votre/vos rôle(s)</h3>
+  <label><input type="checkbox" [(ngModel)]="isPassager" name="passager"> Passager</label>
+  <label><input type="checkbox" [(ngModel)]="isChauffeur" name="chauffeur"> Chauffeur</label>
+
+  <div *ngIf="isChauffeur">
+    <h3>Informations sur le véhicule</h3>
+    <label>
+      Modèle : <input name="modele" placeholder="Modèle" [(ngModel)]="voiture.modele" required>
+    </label>
+    <br />
+    <br />
+    <label>
+      Immatriculation : <input name="Immatriculation" placeholder="Immatriculation" [(ngModel)]="voiture.immatriculation" required>
+    </label>
+    <br />
+    <br />
+    <label>
+      Énergie : <input name="Énergie" placeholder="Énergie" [(ngModel)]="voiture.energie" required>
+    </label>
+    <br />
+    <br />
+    <label>
+      Couleur : <input name="Couleur" placeholder="Couleur" [(ngModel)]="voiture.couleur" required>
+    </label>
+    <br />
+    <br />
+    <label>
+      Date de 1ère immatriculation : <input name="premiere_immatriculation" placeholder="Date de 1ère immatriculation" [(ngModel)]="voiture.date_premiere_immatriculation" required>
+    </label>
+    <br />
+    <br />
+    <label>
+      Marque existante :
+      <select name="marque_existant" [(ngModel)]="voiture.marque_id" [disabled]="nouvelleMarqueActive">
+        <option *ngFor="let marque of marque_existant" [value]="marque.id">{{ marque.libelle }}</option>
+      </select>
+    </label>
+    <br />
+
+    <label>
+      <input type="checkbox" [(ngModel)]="nouvelleMarqueActive" name="nouvelle_marque_act"> Ajouter une nouvelle marque
+    </label>
+    <br />
+
+    <div *ngIf="nouvelleMarqueActive">
+      <input name="Nouvelle_marque" type="text" placeholder="Nouvelle marque" [(ngModel)]="nouvelleMarqueLibelle" required />
+    </div>
+
+    <br />
+    <label>
+      Nombre de places : <input name="nb_place" placeholder="Nombre de places" [(ngModel)]="voiture.nb_place" type="number" required>
+    </label>
+
+    <h4>Préférences</h4>
+    <label><input type="checkbox" [(ngModel)]="voiture.preference.fumeur" name="fumeur"> Fumeur acceptés</label>
+<br />
+<label><input type="checkbox" [(ngModel)]="voiture.preference.animal" name="animal"> Animaux acceptés</label>
+<br />
+<input placeholder="Autres préférences" [(ngModel)]="voiture.preference.autre" name="autre">
+  </div>
+
+  <br />
+  <br />
+  <button type="submit" [disabled]="profilForm.invalid">Valider</button>
+</form>

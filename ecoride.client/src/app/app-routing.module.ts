@@ -5,7 +5,8 @@ import { AccueilComponent } from './accueil/accueil.component';
 import { ItineraireformComponent } from './itineraireform/itineraireform.component';
 import { ItinerairevueComponent } from './itinerairevue/itinerairevue.component';
 import { InscriptionComponent } from './inscription/inscription.component';
-import { AuthentificationComponent } from './authentification/authentification.component'
+import { AuthentificationComponent } from './authentification/authentification.component';
+import { ProfilComponent} from './profil/profil.component';
 import { AuthGuard } from './authentification/auth.guard';
 
 const routes: Routes = [
@@ -16,6 +17,7 @@ const routes: Routes = [
   { path: 'itinerairevue', component: ItinerairevueComponent },
   { path: 'inscription', component: InscriptionComponent },
   { path: 'login', component: AuthentificationComponent },
+  { path: 'profil', component: ProfilComponent, canActivate: [AuthGuard] },
   { path: '', redirectTo: '/accueil', pathMatch: 'full' } // Redirige vers la page1 par défaut];
 ];
 

@@ -15,6 +15,14 @@ namespace EcoRide.Server.Data
         // Exemple de table
         public DbSet<Covoiturage> covoiturage { get; set; }
         public DbSet<Utilisateur> utilisateur { get; set; }
+        public DbSet<Voiture> voiture { get; set; }
+        public DbSet<Role> role { get; set; }
+        public DbSet<Preference> preference { get; set; }
+        public DbSet<Possede> possede { get; set; }
+        public DbSet<Avis> avis { get; set; }
+        public DbSet<Parametre> parametre { get; set; }
+        public DbSet<Marque> marque { get; set; }
+        public DbSet<Participation> participation { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             var connectionString = "server=localhost;database=ecoride;user=root;password=aON8hSy_GeS;";

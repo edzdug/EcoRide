@@ -10,6 +10,7 @@ import { ItinerairevueComponent } from './itinerairevue/itinerairevue.component'
 import { InscriptionComponent } from './inscription/inscription.component';
 import { AuthentificationComponent } from './authentification/authentification.component';
 import { TokenInterceptor } from './authentification/token.interceptor';
+import { ProfilComponent } from './profil/profil.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { TokenInterceptor } from './authentification/token.interceptor';
     ItineraireformComponent,
     ItinerairevueComponent,
     InscriptionComponent,
-    AuthentificationComponent
+    AuthentificationComponent,
+    ProfilComponent
   ],
   imports: [
     BrowserModule, HttpClientModule,

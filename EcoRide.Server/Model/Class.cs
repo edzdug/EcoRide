@@ -61,4 +61,69 @@ namespace EcoRide.Server.Model
         public string Pseudo { get; set; }
     }
 
+    public class Voiture 
+    {
+        public int? Id { get; set; }
+        public string modele { get; set; }
+        public string immatriculation { get; set; }
+        public string energie { get; set; }
+        public string couleur { get; set; }
+        public string date_premiere_immatriculation { get; set; }
+        public int utilisateur_id { get; set; }
+        public int marque_id { get; set; }
+        public int nb_place { get; set; }
+        public Preference preference { get; set; }
+    }
+
+    public class Preference
+    {
+        public bool fumeur { get; set; }
+        public bool animal { get; set; }
+        public string autre { get; set; }
+    }
+
+    public class Role
+    {
+        public int? Id { get; set; }
+        public string libelle { get; set; }
+    }
+
+    public class Possede 
+    {
+        public string utilisateur_id { get; set; }
+        public string role_id { get; set; }
+    }
+
+    public class Participation
+    {
+        public string utilisateur_id { get; set; }
+        public string covoiturage_id { get; set; }
+    }
+
+    public class Parametre
+    {
+        public int? id { get; set; }
+        public string propriete { get; set; }
+        public string valeur { get; set; }
+    }
+
+    public class Marque
+    {
+        public int? Id { get; set; }
+        public string libelle { get; set; }
+    }
+
+    public class Configuration
+    {
+        public int? Id { get; set; }
+    }
+
+    public class Avis
+    {
+        public int? Id { get; set; }
+        public string commentaire { get; set; }
+        public string note { get; set; }
+        public string statut { get; set; }
+
+    }
 }
