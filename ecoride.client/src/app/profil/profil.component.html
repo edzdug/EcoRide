@@ -19,8 +19,12 @@
     <br />
     <br />
     <label>
-      Énergie : <input name="Énergie" placeholder="Énergie" [(ngModel)]="voiture.energie" required>
+      Énergie :
+      <select [(ngModel)]="voiture.energie" name="energie" required>
+        <option *ngFor="let e of energies" [value]="e">{{ e }}</option>
+      </select>
     </label>
+
     <br />
     <br />
     <label>
@@ -57,10 +61,10 @@
 
     <h4>Préférences</h4>
     <label><input type="checkbox" [(ngModel)]="voiture.preference.fumeur" name="fumeur"> Fumeur acceptés</label>
-<br />
-<label><input type="checkbox" [(ngModel)]="voiture.preference.animal" name="animal"> Animaux acceptés</label>
-<br />
-<input placeholder="Autres préférences" [(ngModel)]="voiture.preference.autre" name="autre">
+    <br />
+    <label><input type="checkbox" [(ngModel)]="voiture.preference.animal" name="animal"> Animaux acceptés</label>
+    <br />
+    <input placeholder="Autres préférences" [(ngModel)]="voiture.preference.autre" name="autre">
   </div>
 
   <br />

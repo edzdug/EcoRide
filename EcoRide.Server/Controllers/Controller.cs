@@ -78,7 +78,7 @@ namespace EcoRide.Server.Controllers
         }
 
         [HttpGet("GetItiniraireAll")]
-        public async Task<ActionResult<IEnumerable<Covoiturage>>> GetAll()
+        public async Task<ActionResult<IEnumerable<CovoiturageDto>>> GetAll()
         {
             var result = await _service.GetAllAsync();
             return result.ToList();

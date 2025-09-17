@@ -23,6 +23,7 @@ namespace EcoRide.Server.Data
         public DbSet<Parametre> parametre { get; set; }
         public DbSet<Marque> marque { get; set; }
         public DbSet<Participation> participation { get; set; }
+        public DbSet<Depose> depose { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             var connectionString = "server=localhost;database=ecoride;user=root;password=aON8hSy_GeS;";

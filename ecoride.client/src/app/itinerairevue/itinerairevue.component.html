@@ -1,3 +1,26 @@
+<label>
+  <input type="checkbox" [(ngModel)]="filtreEnergieElec" (change)="onEnergieFilterChange()" />
+  Véhicules écologiques (électrique ou hybride)
+</label>
+<br />
+<label>
+  Prix maximum :
+  <input type="number" [(ngModel)]="prixMaximum" (input)="filterCovoiturages()" placeholder="Ex: 25" />
+</label>
+<br />
+<label>
+  Durée max (minutes) :
+  <input type="number" [(ngModel)]="dureeMaxMinutes" (input)="filterCovoiturages()" placeholder="Ex : 120" />
+</label>
+<br />
+<label>
+  Note minimale :
+  <input type="number" step="1" min="0" max="5" [(ngModel)]="noteMinimale" (input)="filterCovoiturages()" />
+</label>
+
+<br />
+<br />
+
 <div *ngIf="filteredCovoiturages.length === 0">
   Aucun covoiturage trouvé.
 </div>
@@ -9,6 +32,8 @@
     <strong>Date :</strong> {{ covoiturage.dateDepart | date:'shortDate' }} <br />
     <strong>Heure départ :</strong> {{ covoiturage.heureDepart }} <br />
     <strong>Heure arrivée :</strong> {{ covoiturage.heureArrivee }} <br />
+    <!--<strong>Énergie :</strong> {{ covoiturage.energie }} <br />-->
+    <!--<strong>Énergie :</strong> {{ covoiturage.energie }} <br />-->
     <strong>Statut :</strong> {{ covoiturage.statut }} <br />
     <strong>Places :</strong> {{ covoiturage.nbPlace }} <br />
     <strong>Prix :</strong> {{ covoiturage.prixPersonne }} €

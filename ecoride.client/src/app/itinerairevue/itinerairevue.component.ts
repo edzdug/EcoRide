@@ -15,6 +15,8 @@ interface Covoiturage {
   statut?: string;
   nbPlace: number;
   prixPersonne: number;
+  energie?: string;
+  noteMinimale?: number;
 }
 
 
@@ -29,14 +31,24 @@ export class ItinerairevueComponent implements OnInit {
   form: any;
   public covoiturages: Covoiturage[] = [];
   list: any;
-  constructor(private http: HttpClient, private formDataService: FormDataService) { }
+  filtreEnergieElec: boolean = false;
+  filtrePrix: boolean = false;
+  prixMaximum: number | null = null;
+  dureeMaxMinutes: number | null = null;
+  noteMinimale?: number;
 
+  constructor(private http: HttpClient, private formDataService: FormDataService) { }
 
 
   ngOnInit() {
     this.form = this.formDataService.getForm();
     
     this.getAll();    
+  }
+
+  onEnergieFilterChange(): void {
+    this.filtreEnergies = this.filtreEnergieElec ? ['électrique', 'hybride'] : [];
+    this.filterCovoiturages();
   }
 
   getAll() {
@@ -58,27 +70,54 @@ export class ItinerairevueComponent implements OnInit {
 
   filteredCovoiturages: Covoiturage[] = [];
 
+  filtreEnergies: string[] = [];
+
   filterCovoiturages(): void {
     if (!this.form) return;
 
-    this.filteredCovoiturages = this.covoiturages.filter((covoiturage) => {
-      const sameDepart = (covoiturage.lieuDepart || '').toLowerCase() === (this.form.depart || '').toLowerCase();
-      const sameDestination = (covoiturage.lieuArrivee || '').toLowerCase() === (this.form.destination || '').toLowerCase();
+    this.filteredCovoiturages = this.covoiturages.filter((c) => {
+      const sameDepart = (c.lieuDepart || '').toLowerCase() === (this.form.depart || '').toLowerCase();
+      const sameDestination = (c.lieuArrivee || '').toLowerCase() === (this.form.destination || '').toLowerCase();
 
-      const covoiturageDate = new Date(covoiturage.dateDepart);
-      const formDate = new Date(this.form.date);
-
+      const cDate = new Date(c.dateDepart);
+      const fDate = new Date(this.form.date);
       const sameDate =
-        covoiturageDate.getFullYear() === formDate.getFullYear() &&
-        covoiturageDate.getMonth() === formDate.getMonth() &&
-        covoiturageDate.getDate() === formDate.getDate();
+        cDate.getFullYear() === fDate.getFullYear() &&
+        cDate.getMonth() === fDate.getMonth() &&
+        cDate.getDate() === fDate.getDate();
 
-      return sameDepart && sameDestination && sameDate;
+      // Énergie
+      const matchEnergie =
+        !this.filtreEnergieElec ||
+        ['électrique', 'hybride'].includes((c.energie || '').toLowerCase());
+
+      // Prix
+      const matchPrix = this.prixMaximum == null || c.prixPersonne <= this.prixMaximum;
+
+      // Durée
+      let dureeOk = true;
+      if (this.dureeMaxMinutes != null) {
+        // Compose date+heure départ et arrivée en Date
+        const departDateTime = new Date(c.dateDepart);
+        const [hDep, mDep] = c.heureDepart.split(':').map(Number);
+        departDateTime.setHours(hDep, mDep, 0, 0);
+
+        const arriveeDateTime = new Date(c.dateArrivee);
+        const [hArr, mArr] = c.heureArrivee.split(':').map(Number);
+        arriveeDateTime.setHours(hArr, mArr, 0, 0);
+
+        // Calcul durée en minutes
+        const duree = (arriveeDateTime.getTime() - departDateTime.getTime()) / (1000 * 60);
+
+        dureeOk = duree <= this.dureeMaxMinutes;
+      }
+
+      // Note
+      const matchNote = !this.noteMinimale || (c.noteMinimale ?? 0) >= this.noteMinimale;
+
+      return sameDepart && sameDestination && sameDate && matchEnergie && matchPrix && dureeOk && matchNote;
     });
-
-    console.log(" Résultats filtrés :", this.filteredCovoiturages);
   }
-
 
 
 }

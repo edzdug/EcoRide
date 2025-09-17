@@ -32,6 +32,8 @@ export class ProfilComponent {
   nouvelleMarqueLibelle = '';
   public rolesDispo: Role[] = [];
 
+  energies: string[] = ["électrique", "diesel", "gazole","hybride"];
+
 
   voiture = {
     modele: '',

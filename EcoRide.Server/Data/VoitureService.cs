@@ -27,16 +27,16 @@ public class VoitureService
                 @date_premiere_immatriculation, @utilisateur_id, @marque_id, @nb_place, @preference
             );", connection);
 
-        var preferenceJson = JsonSerializer.Serialize(voiture.preference);
+        var preferenceJson = JsonSerializer.Serialize(voiture.Preference);
 
-        command.Parameters.AddWithValue("@modele", voiture.modele);
-        command.Parameters.AddWithValue("@immatriculation", voiture.immatriculation);
-        command.Parameters.AddWithValue("@energie", voiture.energie);
-        command.Parameters.AddWithValue("@couleur", voiture.couleur);
-        command.Parameters.AddWithValue("@date_premiere_immatriculation", voiture.date_premiere_immatriculation);
-        command.Parameters.AddWithValue("@utilisateur_id", voiture.utilisateur_id);
-        command.Parameters.AddWithValue("@marque_id", voiture.marque_id);
-        command.Parameters.AddWithValue("@nb_place", voiture.nb_place);
+        command.Parameters.AddWithValue("@modele", voiture.Modele);
+        command.Parameters.AddWithValue("@immatriculation", voiture.Immatriculation);
+        command.Parameters.AddWithValue("@energie", voiture.Energie);
+        command.Parameters.AddWithValue("@couleur", voiture.Couleur);
+        command.Parameters.AddWithValue("@date_premiere_immatriculation", voiture.Date_premiere_immatriculation);
+        command.Parameters.AddWithValue("@utilisateur_id", voiture.Utilisateur_id);
+        command.Parameters.AddWithValue("@marque_id", voiture.Marque_id);
+        command.Parameters.AddWithValue("@nb_place", voiture.Nb_place);
         command.Parameters.AddWithValue("@preference", preferenceJson);
 
         await command.ExecuteNonQueryAsync();
@@ -61,15 +61,15 @@ public class VoitureService
             result.Add(new Voiture
             {
                 Id = Convert.ToInt32(reader["voiture_id"]),
-                modele = reader["modele"].ToString(),
-                immatriculation = reader["immatriculation"].ToString(),
-                energie = reader["energie"].ToString(),
-                couleur = reader["couleur"].ToString(),
-                date_premiere_immatriculation = reader["date_premiere_immatriculation"].ToString(),
-                utilisateur_id = Convert.ToInt32(reader["utilisateur_id"]),
-                marque_id = Convert.ToInt32(reader["marque_id"]),
-                nb_place = Convert.ToInt32(reader["nb_place"]),
-                preference = pref ?? new Preference()
+                Modele = reader["modele"].ToString(),
+                Immatriculation = reader["immatriculation"].ToString(),
+                Energie = reader["energie"].ToString(),
+                Couleur = reader["couleur"].ToString(),
+                Date_premiere_immatriculation = reader["date_premiere_immatriculation"].ToString(),
+                Utilisateur_id = Convert.ToInt32(reader["utilisateur_id"]),
+                Marque_id = Convert.ToInt32(reader["marque_id"]),
+                Nb_place = Convert.ToInt32(reader["nb_place"]),
+                Preference = pref ?? new Preference()
             });
         }
 
@@ -92,7 +92,7 @@ public class VoitureService
                 result.Add(new Marque
                 {
                     Id = Convert.ToInt32(reader["marque_id"]),
-                    libelle = reader["libelle"].ToString(),
+                    Libelle = reader["libelle"].ToString(),
                 });
             }
 
