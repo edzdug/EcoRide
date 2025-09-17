@@ -16,7 +16,7 @@ public class RoleService
         using var connection = new MySqlConnection(_connectionString);
         await connection.OpenAsync();
 
-        var utilisateurId = roles.First().utilisateur_id;
+        var utilisateurId = roles.First().Utilisateur_id;
 
         // Supprimer les anciens rôles
         var deleteCmd = new MySqlCommand("DELETE FROM possede WHERE utilisateur_id = @uid", connection);
@@ -28,8 +28,8 @@ public class RoleService
         {
             var insertCmd = new MySqlCommand(
                 "INSERT INTO possede (utilisateur_id, role_id) VALUES (@uid, @rid)", connection);
-            insertCmd.Parameters.AddWithValue("@uid", role.utilisateur_id);
-            insertCmd.Parameters.AddWithValue("@rid", role.role_id);
+            insertCmd.Parameters.AddWithValue("@uid", role.Utilisateur_id);
+            insertCmd.Parameters.AddWithValue("@rid", role.Role_id);
             await insertCmd.ExecuteNonQueryAsync();
         }
     }
@@ -50,7 +50,7 @@ public class RoleService
             result.Add(new Role
             {
                 Id = Convert.ToInt32(reader["role_id"]),
-                libelle = reader["libelle"].ToString(),
+                Libelle = reader["libelle"].ToString(),
             });
         }
 
