@@ -39,4 +39,8 @@ export class AuthService {
   get isLoggedIn() {
     return !!this._userSubject.value;
   }
+
+  get currentUserValue() {
+    return this._userSubject.value;
+  }
 }

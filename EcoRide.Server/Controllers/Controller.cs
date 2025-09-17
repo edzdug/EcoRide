@@ -142,7 +142,7 @@ namespace EcoRide.Server.Controllers
 
         }
     }
-    
+
     [ApiController]
     [Route("api/[controller]")]
     public class AuthentificationController : ControllerBase
@@ -150,7 +150,7 @@ namespace EcoRide.Server.Controllers
         private readonly JwtService _jwtService;
         private readonly UtilisateurService _service;
 
-        public AuthentificationController(UtilisateurService service , JwtService jwtService)
+        public AuthentificationController(UtilisateurService service, JwtService jwtService)
         {
             _service = service;
             _jwtService = jwtService;
@@ -185,6 +185,78 @@ namespace EcoRide.Server.Controllers
         }
 
     }
-    
 
+
+    [ApiController]
+    [Route("api/[controller]")]
+    public class ProfilController : ControllerBase
+    {
+        private readonly UtilisateurService _utilisateurService;
+        private readonly RoleService _roleService;
+        private readonly VoitureService _voitureService;
+
+        public ProfilController(IConfiguration config)
+        {
+            _utilisateurService = new UtilisateurService(config);
+            _roleService = new RoleService(config);
+            _voitureService = new VoitureService(config);
+        }
+
+        // GET: /api/profil/{id}
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Utilisateur>> GetUtilisateur(int id)
+        {
+            var user = await _utilisateurService.GetUtilisateurByIdAsync(id);
+            if (user == null) return NotFound();
+            return Ok(user);
+        }
+
+        // POST: /api/profil/roles
+        [HttpPost("roleSet")]
+        public async Task<IActionResult> SetRoles([FromBody] Possede[] roles)
+        {
+            await _roleService.DefinirRolesUtilisateurAsync(roles);
+            return Ok();
+        }
+
+        [HttpGet("roleGet")]
+        public async Task<ActionResult<List<Role>>> GetRoleAll()
+        {
+            var roles = await _roleService.GetRoleAsync();
+            return Ok(roles);
+        }
+
+        // POST: /api/profil/voiture
+        [HttpPost("voiture")]
+        public async Task<IActionResult> AjouterVoiture([FromBody] Voiture voiture)
+        {
+            await _voitureService.AjouterVoitureAsync(voiture);
+            return Ok();
+        }
+
+        // GET: /api/profil/voiture/{utilisateurId}
+        [HttpGet("voiture/{utilisateurId}")]
+        public async Task<ActionResult<List<Voiture>>> GetVoitures(int utilisateurId)
+        {
+            var voitures = await _voitureService.GetVoituresByUtilisateurIdAsync(utilisateurId);
+            return Ok(voitures);
+        }
+
+        [HttpGet("marqueGet")]
+        public async Task<ActionResult<List<Voiture>>> GetMarqueAll()
+        {
+            var marques = await _voitureService.GetMarqueAsync();
+            return Ok(marques);
+        }
+
+        [HttpPost("marqueAdd")]
+        public async Task<ActionResult<int>> AjouterMarque([FromBody] string libelle)
+        {
+            if (string.IsNullOrWhiteSpace(libelle))
+                return BadRequest("Libellé de marque invalide.");
+
+            var id = await _voitureService.AjouterOuRecupererMarqueAsync(libelle);
+            return Ok(id);
+        }
+    }
 }
