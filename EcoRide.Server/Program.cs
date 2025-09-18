@@ -18,6 +18,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     ));
 builder.Services.AddScoped<CovoiturageService>();
 builder.Services.AddScoped<UtilisateurService>();
+builder.Services.AddScoped<RoleService>();
+builder.Services.AddScoped<ParticipationService>();
+builder.Services.AddScoped<VoitureService>();
 
 builder.Services.AddSingleton<JwtService>();
 

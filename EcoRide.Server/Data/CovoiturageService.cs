@@ -161,7 +161,51 @@ public class CovoiturageService
         return detail;
     }
 
+    public async Task<Covoiturage?> GetByIdAsync(int id)
+    {
+        using var connection = new MySqlConnection(_connectionString);
+        await connection.OpenAsync();
 
+        var command = new MySqlCommand("SELECT * FROM covoiturage WHERE covoiturage_id = @id;", connection);
+        command.Parameters.AddWithValue("@id", id);
+
+        using var reader = await command.ExecuteReaderAsync();
+
+        if (await reader.ReadAsync())
+        {
+            return new Covoiturage
+            {
+                Id = Convert.ToInt32(reader["covoiturage_id"]),
+                DateDepart = Convert.ToDateTime(reader["date_depart"]),
+                HeureDepart = TimeOnly.FromTimeSpan((TimeSpan)reader["heure_depart"]),
+                LieuDepart = reader["lieu_depart"].ToString(),
+                DateArrivee = reader["date_arrivee"].ToString(),
+                HeureArrivee = reader["heure_arrivee"].ToString(),
+                LieuArrivee = reader["lieu_arrivee"].ToString(),
+                Statut = reader["statut"] as string,
+                NbPlace = Convert.ToInt32(reader["nb_place"]),
+                PrixPersonne = Convert.ToDecimal(reader["prix_personne"].ToString(), CultureInfo.InvariantCulture),
+                Voiture_id = Convert.ToInt32(reader["voiture_id"])
+            };
+        }
+
+        return null;
+    }
+
+    public async Task DecrementerPlaceAsync(int covoiturageId)
+    {
+        using var connection = new MySqlConnection(_connectionString);
+        await connection.OpenAsync();
+
+        var command = new MySqlCommand(@"
+        UPDATE covoiturage
+        SET nb_place = nb_place - 1
+        WHERE covoiturage_id = @id AND nb_place > 0;", connection);
+
+        command.Parameters.AddWithValue("@id", covoiturageId);
+
+        await command.ExecuteNonQueryAsync();
+    }
 
 
 }

@@ -126,15 +126,23 @@ namespace EcoRide.Server.Model
 
     public class Participation
     {
-        public string Utilisateur_id { get; set; }
-        public string Covoiturage_id { get; set; }
+        public int Utilisateur_id { get; set; }
+        public int Covoiturage_id { get; set; }
     }
+
+    public class ParticipationRequest
+    {
+        public int UtilisateurId { get; set; }
+        public int CovoiturageId { get; set; }
+    }
+
 
     public class Parametre
     {
         public int? id { get; set; }
         public string Propriete { get; set; }
         public string Valeur { get; set; }
+        public int Configuration_id { get; set; }
     }
 
     public class Marque
@@ -146,6 +154,7 @@ namespace EcoRide.Server.Model
     public class Configuration
     {
         public int? Id { get; set; }
+        public int Utilisateur_id { get; set; }
     }
 
     public class Avis
