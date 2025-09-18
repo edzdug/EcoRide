@@ -11,6 +11,7 @@ import { InscriptionComponent } from './inscription/inscription.component';
 import { AuthentificationComponent } from './authentification/authentification.component';
 import { TokenInterceptor } from './authentification/token.interceptor';
 import { ProfilComponent } from './profil/profil.component';
+import { CovoiturageDetailComponent } from './covoiturage-detail/covoiturage-detail.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { ProfilComponent } from './profil/profil.component';
     ItinerairevueComponent,
     InscriptionComponent,
     AuthentificationComponent,
-    ProfilComponent
+    ProfilComponent,
+    CovoiturageDetailComponent
   ],
   imports: [
     BrowserModule, HttpClientModule,

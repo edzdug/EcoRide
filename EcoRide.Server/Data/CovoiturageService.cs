@@ -1,6 +1,7 @@
 ﻿using EcoRide.Server.Model;
-using MySql.Data.MySqlClient;
+using MySqlConnector;
 using System.Globalization;
+using System.Text.Json;
 
 public class CovoiturageService
 {
@@ -50,4 +51,117 @@ public class CovoiturageService
 
         return covoiturages;
     }
+
+    public async Task<CovoiturageDetailDto?> GetDetailAsync(int id)
+    {
+        var sql = @"
+        SELECT 
+            c.covoiturage_id, c.date_depart, c.heure_depart, c.lieu_depart,
+            c.date_arrivee, c.heure_arrivee, c.lieu_arrivee, c.statut,
+            c.nb_place, c.prix_personne, c.voiture_id,
+            v.modele, v.energie, v.preference, v.utilisateur_id, v.marque_id,
+            m.libelle as marque_libelle
+        FROM covoiturage c
+        INNER JOIN voiture v ON c.voiture_id = v.voiture_id
+        INNER JOIN marque m ON v.marque_id = m.marque_id
+        WHERE c.covoiturage_id = @Id";
+
+        using var connection = new MySqlConnection(_connectionString);
+        await connection.OpenAsync();
+
+        CovoiturageDetailDto detail = null;
+
+        using (var command = new MySqlCommand(sql, connection))
+        {
+            command.Parameters.AddWithValue("@Id", id);
+
+            using var reader = await command.ExecuteReaderAsync();
+
+            if (!await reader.ReadAsync())
+            {
+                return null; // pas trouvé
+            }
+
+            // Mapper covoiturage + voiture + marque
+            var covoiturageDto = new CovoiturageDto
+            {
+                Id = reader.GetInt32("covoiturage_id"),
+                DateDepart = reader.GetDateTime("date_depart"),
+                HeureDepart = TimeOnly.FromTimeSpan(reader.GetTimeSpan("heure_depart")),
+                LieuDepart = reader.GetString("lieu_depart"),
+                DateArrivee = reader.GetString("date_arrivee"),
+                HeureArrivee = reader.GetString("heure_arrivee"),
+                LieuArrivee = reader.GetString("lieu_arrivee"),
+                Statut = reader.GetString("statut"),
+                NbPlace = reader.GetInt32("nb_place"),
+                PrixPersonne = Convert.ToDecimal(reader["prix_personne"].ToString(), CultureInfo.InvariantCulture),
+                Voiture_id = reader.GetInt32("voiture_id"),
+                Energie = reader.GetString("energie")
+            };
+
+            // Parse JSON préférences
+            string preferenceJson = reader.IsDBNull(reader.GetOrdinal("preference"))
+                ? "{}"
+                : reader.GetString("preference");
+            Preference preference;
+            try
+            {
+                preference = JsonSerializer.Deserialize<Preference>(preferenceJson);
+            }
+            catch
+            {
+                preference = new Preference
+                {
+                    Fumeur = false,
+                    Animal = false,
+                    Autre = null
+                };
+            }
+
+            string marque = reader.GetString("marque_libelle");
+            int utilisateurId = reader.GetInt32("utilisateur_id");
+
+            detail = new CovoiturageDetailDto
+            {
+                Covoiturage = covoiturageDto,
+                Marque = marque,
+                Modele = reader.GetString("modele"),
+                PreferenceConducteur = preference,
+                AvisConducteur = new List<AvisDto>()
+            };
+
+            // Fermer le reader pour exécuter une nouvelle requête sur la même connexion
+            reader.Close();
+
+            // Récupérer les avis du conducteur
+            var avisSql = @"
+                SELECT a.note, a.commentaire
+                FROM avis a
+                INNER JOIN depose d ON a.avis_id = d.avis_id
+                WHERE d.utilisateur_id = @UtilisateurId";
+
+            using var avisCommand = new MySqlCommand(avisSql, connection);
+            avisCommand.Parameters.AddWithValue("@UtilisateurId", utilisateurId);
+
+            using var avisReader = await avisCommand.ExecuteReaderAsync();
+
+            var avisList = new List<AvisDto>();
+            while (await avisReader.ReadAsync())
+            {
+                avisList.Add(new AvisDto
+                {
+                    Note = avisReader["note"].ToString(),
+                    Commentaire = avisReader["commentaire"].ToString()
+                });
+            }
+
+            detail.AvisConducteur = avisList;
+        }
+
+        return detail;
+    }
+
+
+
+
 }

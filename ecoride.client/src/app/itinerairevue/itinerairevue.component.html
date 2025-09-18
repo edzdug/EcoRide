@@ -1,6 +1,6 @@
 <label>
   <input type="checkbox" [(ngModel)]="filtreEnergieElec" (change)="onEnergieFilterChange()" />
-  Véhicules écologiques (électrique ou hybride)
+  Véhicules écologiques 
 </label>
 <br />
 <label>
@@ -27,13 +27,13 @@
 
 <ul *ngIf="filteredCovoiturages.length > 0">
   <li *ngFor="let covoiturage of filteredCovoiturages">
+    <button *ngIf="covoiturage.id !== undefined" (click)="voirDetail(covoiturage.id!)">Détail</button><br />
     <strong>De :</strong> {{ covoiturage.lieuDepart }} <br />
     <strong>À :</strong> {{ covoiturage.lieuArrivee }} <br />
     <strong>Date :</strong> {{ covoiturage.dateDepart | date:'shortDate' }} <br />
     <strong>Heure départ :</strong> {{ covoiturage.heureDepart }} <br />
     <strong>Heure arrivée :</strong> {{ covoiturage.heureArrivee }} <br />
-    <!--<strong>Énergie :</strong> {{ covoiturage.energie }} <br />-->
-    <!--<strong>Énergie :</strong> {{ covoiturage.energie }} <br />-->
+    <strong>Écologique :</strong> {{ ['électrique', 'hybride'].includes((covoiturage.energie || '').toLowerCase()) ? 'Oui' : 'Non' }} <br />
     <strong>Statut :</strong> {{ covoiturage.statut }} <br />
     <strong>Places :</strong> {{ covoiturage.nbPlace }} <br />
     <strong>Prix :</strong> {{ covoiturage.prixPersonne }} €

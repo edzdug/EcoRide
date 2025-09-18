@@ -8,6 +8,7 @@ import { InscriptionComponent } from './inscription/inscription.component';
 import { AuthentificationComponent } from './authentification/authentification.component';
 import { ProfilComponent} from './profil/profil.component';
 import { AuthGuard } from './authentification/auth.guard';
+import { CovoiturageDetailComponent} from './covoiturage-detail/covoiturage-detail.component'
 
 const routes: Routes = [
   { path: 'home', component: AppComponent },
@@ -18,6 +19,7 @@ const routes: Routes = [
   { path: 'inscription', component: InscriptionComponent },
   { path: 'login', component: AuthentificationComponent },
   { path: 'profil', component: ProfilComponent, canActivate: [AuthGuard] },
+  { path: 'covoiturage/:id', component: CovoiturageDetailComponent },
   { path: '', redirectTo: '/accueil', pathMatch: 'full' } // Redirige vers la page1 par défaut];
 ];
 

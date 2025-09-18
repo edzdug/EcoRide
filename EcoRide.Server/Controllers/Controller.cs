@@ -83,6 +83,16 @@ namespace EcoRide.Server.Controllers
             var result = await _service.GetAllAsync();
             return result.ToList();
         }
+
+        [HttpGet("GetDetail/{id}")]
+        public async Task<ActionResult<CovoiturageDetailDto>> GetDetail(int id)
+        {
+            var detail = await _service.GetDetailAsync(id);
+            if (detail == null) return NotFound();
+
+            return Ok(detail);
+        }
+
     }
 
     [ApiController]
