@@ -3,10 +3,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormDataService } from '../itineraireform/itineraireform.component';
 import { Time } from '@angular/common';
 import { delay, Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 interface Covoiturage {
   id?: number;
-  dateDepart: string;     // ou Date, si tu veux parser
+  dateDepart: string;     
   heureDepart: string;
   lieuDepart: string;
   dateArrivee: string;
@@ -37,7 +38,7 @@ export class ItinerairevueComponent implements OnInit {
   dureeMaxMinutes: number | null = null;
   noteMinimale?: number;
 
-  constructor(private http: HttpClient, private formDataService: FormDataService) { }
+  constructor(private http: HttpClient, private formDataService: FormDataService, private router: Router) { }
 
 
   ngOnInit() {
@@ -66,6 +67,10 @@ export class ItinerairevueComponent implements OnInit {
         console.error('Failed to load covoiturages:', error);
       }
     );
+  }
+
+  voirDetail(id: number) {
+    this.router.navigate(['/covoiturage', id]);
   }
 
   filteredCovoiturages: Covoiturage[] = [];

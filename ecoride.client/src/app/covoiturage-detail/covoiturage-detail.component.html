@@ -1,0 +1,39 @@
+<br />
+<div class="mb-3">
+  <a [routerLink]="['/itinerairevue']">Retour à la page précédente</a>
+</div>
+
+<div *ngIf="!covoiturageDetail">
+  <h2>Echec de la Récupération. Si L'erreur persiste veuillez recharger la page.</h2>
+</div>
+
+
+<div *ngIf="covoiturageDetail">
+  <h2>Détails du covoiturage</h2>
+  <p><strong>De :</strong> {{ covoiturageDetail.covoiturage.lieuDepart }}</p>
+  <p><strong>À :</strong> {{ covoiturageDetail.covoiturage.lieuArrivee }}</p>
+  <p><strong>Date de départ :</strong> {{ covoiturageDetail.covoiturage.dateDepart | date:'shortDate' }}</p>
+  <p><strong>Heure Départ :</strong> {{ covoiturageDetail.covoiturage.heureDepart }}</p>
+  <p><strong>Date d'arrivée :</strong> {{ covoiturageDetail.covoiturage.dateArrivee | date:'shortDate' }}</p>
+  <p><strong>Heure Arrivée :</strong> {{ covoiturageDetail.covoiturage.heureArrivee }}</p>
+  <p><strong>Prix :</strong> {{ covoiturageDetail.covoiturage.prixPersonne }} €</p>
+  <p><strong>Écologique :</strong> {{ ['électrique', 'hybride'].includes((covoiturageDetail.covoiturage.energie || '').toLowerCase()) ? 'Oui' : 'Non' }}</p>
+
+  <h3>🚗 Véhicule</h3>
+  <p><strong>Modèle :</strong> {{ covoiturageDetail.modele }}</p>
+  <p><strong>Marque :</strong> {{ covoiturageDetail.marque }}</p>
+  <p><strong>Énergie :</strong> {{ covoiturageDetail.covoiturage.energie }}</p>
+
+  <h3>👤 Préférences conducteur</h3>
+  <p><strong>Fumeur :</strong> {{ covoiturageDetail.preferenceConducteur.fumeur ? 'Oui' : 'Non' }}</p>
+  <p><strong>Animaux acceptés :</strong> {{ covoiturageDetail.preferenceConducteur.animal ? 'Oui' : 'Non' }}</p>
+  <p><strong>Autre :</strong> {{ covoiturageDetail.preferenceConducteur.autre }}</p>
+
+  <h3>📝 Avis</h3>
+  <ul>
+    <li *ngFor="let avis of covoiturageDetail.avisConducteur">
+      <strong>Note :</strong> {{ avis.note }}<br />
+      <strong>Commentaire :</strong> {{ avis.commentaire }}
+    </li>
+  </ul>
+</div>

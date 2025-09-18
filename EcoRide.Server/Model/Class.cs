@@ -45,6 +45,16 @@ namespace EcoRide.Server.Model
         public decimal? NoteMinimale { get; set; }
     }
 
+    public class CovoiturageDetailDto
+    {
+        public CovoiturageDto Covoiturage { get; set; }
+        public List<AvisDto> AvisConducteur { get; set; }
+        public string Marque { get; set; }
+        public string Modele { get; set; }
+        public Preference PreferenceConducteur { get; set; }
+    }
+
+
 
     public class Utilisateur {
         public int? Id { get; set; }
@@ -99,7 +109,7 @@ namespace EcoRide.Server.Model
     {
         public bool Fumeur { get; set; }
         public bool Animal { get; set; }
-        public string Autre { get; set; }
+        public string? Autre { get; set; }
     }
 
     public class Role
@@ -145,6 +155,11 @@ namespace EcoRide.Server.Model
         public int Note { get; set; }
         public string Statut { get; set; }
 
+    }
+    public class AvisDto
+    {
+        public string? Note { get; set; }
+        public string? Commentaire { get; set; }
     }
 
     public class Depose
