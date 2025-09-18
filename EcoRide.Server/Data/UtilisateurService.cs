@@ -79,6 +79,7 @@ public class UtilisateurService
         using var connection = new MySqlConnection(_connectionString);
         await connection.OpenAsync();
 
+        // Préparer insertion utilisateur
         var command = new MySqlCommand(@"
         INSERT INTO utilisateur (
             nom, prenom, email, password, telephone,
@@ -89,16 +90,13 @@ public class UtilisateurService
         );
         SELECT LAST_INSERT_ID();", connection);
 
-        // Nettoyer la chaîne base64 (pour les data:image/png;base64,...)
+        // Préparer la photo (base64)
         byte[]? photoBytes = null;
-
         if (!string.IsNullOrEmpty(utilisateur.Photo))
         {
             string base64Data = utilisateur.Photo;
             if (base64Data.Contains(','))
-            {
                 base64Data = base64Data.Substring(base64Data.IndexOf(',') + 1);
-            }
 
             try
             {
@@ -106,13 +104,14 @@ public class UtilisateurService
             }
             catch (FormatException)
             {
-                photoBytes = null; // ou tu peux gérer l'erreur plus finement
+                photoBytes = null;
             }
         }
 
+        // Ajouter les paramètres
         command.Parameters.AddWithValue("@nom", utilisateur.Nom);
         command.Parameters.AddWithValue("@prenom", utilisateur.Prenom);
-        command.Parameters.AddWithValue("@email", utilisateur.Email); 
+        command.Parameters.AddWithValue("@email", utilisateur.Email);
         command.Parameters.AddWithValue("@password", BCrypt.Net.BCrypt.HashPassword(utilisateur.Password));
         command.Parameters.AddWithValue("@telephone", utilisateur.Telephone);
         command.Parameters.AddWithValue("@adresse", utilisateur.Adresse);
@@ -120,9 +119,27 @@ public class UtilisateurService
         command.Parameters.AddWithValue("@photo", photoBytes ?? (object)DBNull.Value);
         command.Parameters.AddWithValue("@pseudo", utilisateur.Pseudo);
 
+        // Exécuter l'insertion utilisateur
         var insertedId = Convert.ToInt32(await command.ExecuteScalarAsync());
+
+        // --- Étape 2 : Créer la configuration ---
+        var configCommand = new MySqlCommand(@"
+        INSERT INTO configuration (utilisateur_id)
+        VALUES (@utilisateurId);
+        SELECT LAST_INSERT_ID();", connection);
+        configCommand.Parameters.AddWithValue("@utilisateurId", insertedId);
+        var configId = Convert.ToInt32(await configCommand.ExecuteScalarAsync());
+
+        // --- Étape 3 : Ajouter le crédit par défaut ---
+        var creditCommand = new MySqlCommand(@"
+        INSERT INTO parametre (propriete, valeur, configuration_id)
+        VALUES ('credit', '20', @configId);", connection);
+        creditCommand.Parameters.AddWithValue("@configId", configId);
+        await creditCommand.ExecuteNonQueryAsync();
+
         return insertedId;
     }
+
 
     public async Task<bool> EmailExisteAsync(string email)
     {
@@ -177,5 +194,46 @@ public class UtilisateurService
 
         return null; // utilisateur non trouvé
     }
+
+    public async Task<decimal> GetCreditAsync(int utilisateurId)
+    {
+        using var connection = new MySqlConnection(_connectionString);
+        await connection.OpenAsync();
+
+        var command = new MySqlCommand(@"
+        SELECT p.valeur
+        FROM parametre p
+        JOIN configuration c ON p.configuration_id = c.configuration_id
+        WHERE c.utilisateur_id = @userId AND p.propriete = 'credit';", connection);
+
+        command.Parameters.AddWithValue("@userId", utilisateurId);
+
+        var result = await command.ExecuteScalarAsync();
+
+        if (result != null && double.TryParse(result.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out double creditDouble))
+        {
+            return (decimal)creditDouble;
+        }
+
+        return 0; // Aucun crédit trouvé
+    }
+
+    public async Task RetirerCreditAsync(int utilisateurId, decimal montant)
+    {
+        using var connection = new MySqlConnection(_connectionString);
+        await connection.OpenAsync();
+
+        var command = new MySqlCommand(@"
+        UPDATE parametre p
+        JOIN configuration c ON p.configuration_id = c.configuration_id
+        SET p.valeur = CAST(CAST(p.valeur AS DECIMAL(10,2)) - @montant AS CHAR)
+        WHERE c.utilisateur_id = @userId AND p.propriete = 'credit';", connection);
+
+        command.Parameters.AddWithValue("@userId", utilisateurId);
+        command.Parameters.AddWithValue("@montant", montant);
+
+        await command.ExecuteNonQueryAsync();
+    }
+
 
 }

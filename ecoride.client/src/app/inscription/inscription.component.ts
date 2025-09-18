@@ -56,11 +56,11 @@ export class InscriptionComponent {
     if (this.form.photo) {
       const base64Photo = await blobToBase64(this.form.photo);
       const utilisateurToSend = { ...this.form, photo: base64Photo };
-      this.http.post('/api/utilisateur', utilisateurToSend).subscribe(response => {
+      this.http.post('/api/utilisateur/PostUser', utilisateurToSend).subscribe(response => {
         console.log("Utilisateur créé :", response);
       });
     } else {
-      this.http.post('/api/utilisateur', this.form).subscribe(response => {
+      this.http.post('/api/utilisateur/PostUser', this.form).subscribe(response => {
         console.log("Utilisateur créé :", response);
       });
     }

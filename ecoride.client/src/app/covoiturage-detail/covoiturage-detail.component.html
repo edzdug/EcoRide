@@ -16,6 +16,7 @@
   <p><strong>Heure Départ :</strong> {{ covoiturageDetail.covoiturage.heureDepart }}</p>
   <p><strong>Date d'arrivée :</strong> {{ covoiturageDetail.covoiturage.dateArrivee | date:'shortDate' }}</p>
   <p><strong>Heure Arrivée :</strong> {{ covoiturageDetail.covoiturage.heureArrivee }}</p>
+  <p><strong>Nombre de place :</strong> {{ covoiturageDetail.covoiturage.nbPlace }}</p>
   <p><strong>Prix :</strong> {{ covoiturageDetail.covoiturage.prixPersonne }} €</p>
   <p><strong>Écologique :</strong> {{ ['électrique', 'hybride'].includes((covoiturageDetail.covoiturage.energie || '').toLowerCase()) ? 'Oui' : 'Non' }}</p>
 
@@ -36,4 +37,13 @@
       <strong>Commentaire :</strong> {{ avis.commentaire }}
     </li>
   </ul>
+  <br />
+  <br />
+  <br />
+
+  <button *ngIf="covoiturageDetail.covoiturage.nbPlace != 0" (click)="confirmerParticipation()">Participer</button>
+  <div *ngIf="covoiturageDetail.covoiturage.nbPlace == 0">
+    <h2 >Aucune place de disponible. Vous ne pouvez pas participer à ce covoiturage</h2>
+  </div>
+
 </div>

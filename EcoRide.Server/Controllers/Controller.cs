@@ -71,10 +71,14 @@ namespace EcoRide.Server.Controllers
     public class CovoiturageController : ControllerBase
     {
         private readonly CovoiturageService _service;
+        private readonly UtilisateurService _serviceUser;
+        private readonly ParticipationService _serviceParticipation;
 
-        public CovoiturageController(CovoiturageService service)
+        public CovoiturageController(CovoiturageService service, UtilisateurService serviceUser, ParticipationService serviceParticipation)
         {
             _service = service;
+            _serviceUser = serviceUser;
+            _serviceParticipation = serviceParticipation;
         }
 
         [HttpGet("GetItiniraireAll")]
@@ -91,6 +95,33 @@ namespace EcoRide.Server.Controllers
             if (detail == null) return NotFound();
 
             return Ok(detail);
+        }
+
+        [HttpPost("Participer")]
+        public async Task<IActionResult> Participer([FromBody] ParticipationRequest request)
+        {
+            var utilisateur = await _serviceUser.GetUtilisateurByIdAsync(request.UtilisateurId);
+            var covoiturage = await _service.GetByIdAsync(request.CovoiturageId);
+            var credit = await _serviceUser.GetCreditAsync(request.UtilisateurId);
+
+            if (utilisateur == null || covoiturage == null)
+                return NotFound("Utilisateur ou trajet introuvable.");
+
+            if (covoiturage.NbPlace <= 0)
+                return BadRequest("Plus de places disponibles.");
+
+            if (credit < covoiturage.PrixPersonne)
+                return BadRequest("Crédit insuffisant.");
+
+            if (await _serviceParticipation.ExisteParticipationAsync(request.UtilisateurId, request.CovoiturageId))
+                return BadRequest("Déjà inscrit à ce covoiturage.");
+
+            // Enregistrement
+            await _serviceParticipation.AjouterParticipationAsync(request.UtilisateurId, request.CovoiturageId);
+            await _serviceUser.RetirerCreditAsync(request.UtilisateurId, covoiturage.PrixPersonne);
+            await _service.DecrementerPlaceAsync(request.CovoiturageId);
+
+            return Ok("Participation enregistrée !");
         }
 
     }
@@ -123,7 +154,7 @@ namespace EcoRide.Server.Controllers
             return Ok(user);
         }
 
-        [HttpPost]
+        [HttpPost("PostUser")]
         public async Task<ActionResult<Utilisateur>> PostAsync([FromBody] Utilisateur utilisateur)
         {
             if (await _service.EmailExisteAsync(utilisateur.Email))
