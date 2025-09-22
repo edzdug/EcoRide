@@ -2,48 +2,48 @@
 <div class="mb-3">
   <a [routerLink]="['/itineraireform']">Retour à la page précédente</a>
 </div>
-<br />
-<br />
 
-<label>
-  <input type="checkbox" [(ngModel)]="filtreEnergieElec" (change)="onEnergieFilterChange()" />
-  Véhicules écologiques
-</label>
-<br />
-<label>
-  Prix maximum :
-  <input type="number" [(ngModel)]="prixMaximum" (input)="filterCovoiturages()" placeholder="Ex: 25" />
-</label>
-<br />
-<label>
-  Durée max (minutes) :
-  <input type="number" [(ngModel)]="dureeMaxMinutes" (input)="filterCovoiturages()" placeholder="Ex : 120" />
-</label>
-<br />
-<label>
-  Note minimale :
-  <input type="number" step="1" min="0" max="5" [(ngModel)]="noteMinimale" (input)="filterCovoiturages()" />
-</label>
+<form class="centeredForm">
+  <label>
+    <input type="checkbox" [(ngModel)]="filtreEnergieElec" (change)="onEnergieFilterChange()" name="filtreEnergieElec"/>
+    Véhicules écologiques
+  </label>
+  <br />
+  <label>
+    Prix maximum :
+    <input type="number" [(ngModel)]="prixMaximum" (input)="filterCovoiturages()" placeholder="Ex: 25" name="prixMaximum"/>
+  </label>
+  <br />
+  <label>
+    Durée max (minutes) :
+    <input type="number" [(ngModel)]="dureeMaxMinutes" (input)="filterCovoiturages()" placeholder="Ex : 120" name="dureeMaxMinutes"/>
+  </label>
+  <br />
+  <label>
+    Note minimale :
+    <input type="number" step="1" min="0" max="5" [(ngModel)]="noteMinimale" (input)="filterCovoiturages()" name="noteMinimale"/>
+  </label>
 
-<br />
-<br />
+  <br />
+  <br />
 
-<div *ngIf="filteredCovoiturages.length === 0">
-  Aucun covoiturage trouvé.
-</div>
+  <div class="error-message" *ngIf="filteredCovoiturages.length === 0">
+    Aucun covoiturage trouvé.
+  </div>
 
-<ul *ngIf="filteredCovoiturages.length > 0">
-  <li *ngFor="let covoiturage of filteredCovoiturages">
-    <button *ngIf="covoiturage.id !== undefined" (click)="voirDetail(covoiturage.id!)">Détail</button><br />
-    <strong>De :</strong> {{ covoiturage.lieuDepart }} <br />
-    <strong>À :</strong> {{ covoiturage.lieuArrivee }} <br />
-    <strong>Date :</strong> {{ covoiturage.dateDepart | date:'shortDate' }} <br />
-    <strong>Heure départ :</strong> {{ covoiturage.heureDepart }} <br />
-    <strong>Heure arrivée :</strong> {{ covoiturage.heureArrivee }} <br />
-    <strong>Écologique :</strong> {{ ['électrique', 'hybride'].includes((covoiturage.energie || '').toLowerCase()) ? 'Oui' : 'Non' }} <br />
-    <strong>Statut :</strong> {{ covoiturage.statut }} <br />
-    <strong>Places :</strong> {{ covoiturage.nbPlace }} <br />
-    <strong>Prix :</strong> {{ covoiturage.prixPersonne }} €
-    <hr />
-  </li>
-</ul>
+  <ul *ngIf="filteredCovoiturages.length > 0">
+    <li *ngFor="let covoiturage of filteredCovoiturages">
+      <button  *ngIf="covoiturage.id !== undefined" (click)="voirDetail(covoiturage.id!)">Détail</button><br />
+      <strong>De :</strong> {{ covoiturage.lieuDepart }} <br />
+      <strong>À :</strong> {{ covoiturage.lieuArrivee }} <br />
+      <strong>Date :</strong> {{ covoiturage.dateDepart | date:'shortDate' }} <br />
+      <strong>Heure départ :</strong> {{ covoiturage.heureDepart }} <br />
+      <strong>Heure arrivée :</strong> {{ covoiturage.heureArrivee }} <br />
+      <strong>Écologique :</strong> {{ ['électrique', 'hybride'].includes((covoiturage.energie || '').toLowerCase()) ? 'Oui' : 'Non' }} <br />
+      <strong>Statut :</strong> {{ covoiturage.statut }} <br />
+      <strong>Places :</strong> {{ covoiturage.nbPlace }} <br />
+      <strong>Prix :</strong> {{ covoiturage.prixPersonne }} €
+      <hr />
+    </li>
+  </ul>
+</form>

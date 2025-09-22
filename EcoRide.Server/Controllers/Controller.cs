@@ -124,6 +124,19 @@ namespace EcoRide.Server.Controllers
             return Ok("Participation enregistrée !");
         }
 
+        [HttpPost("Ajouter")]
+        public async Task<IActionResult> Ajouter([FromBody] AjouterCovoiturageRequest request)
+        {
+            try
+            {
+                await _service.AjouterCovoiturageAsync(request);
+                return Ok(new { message = "Covoiturage ajouté avec succès !" });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erreur lors de l’ajout : {ex.Message}");
+            }
+        }
     }
 
     [ApiController]

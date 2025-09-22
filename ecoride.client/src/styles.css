@@ -1,1 +1,90 @@
 /* You can add global styles to this file, and also import other style files */
+/* Style global des formulaires */
+form {
+  max-width: 450px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fafafa;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  font-family: Arial, sans-serif;
+}
+
+  /* Labels au-dessus des champs, en block pour passer à la ligne */
+  form label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-weight: 600;
+    color: #333;
+    font-size: 0.95rem;
+  }
+
+  /* Champs input/select/textarea uniformes */
+  form input,
+  form select,
+  form textarea {
+    display: block;
+    width: 100%;
+    padding: 0.5rem 0.7rem;
+    margin-bottom: 1.2rem;
+    border: 1px solid #bbb;
+    border-radius: 5px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+  }
+
+    form input:focus,
+    form select:focus,
+    form textarea:focus {
+      outline: none;
+      border-color: #4a90e2;
+      box-shadow: 0 0 5px rgba(74,144,226,0.5);
+    }
+
+  /* Bouton submit */
+  form button[type="submit"] {
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.4rem;
+    font-weight: 700;
+    font-size: 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+    form button[type="submit"]:hover:not(:disabled) {
+      background-color: #357ABD;
+    }
+
+  form button[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+/* Messages d’erreur */
+.error-message {
+  color: #d9534f;
+  font-size: 0.85rem;
+  margin-top: -1rem;
+  margin-bottom: 1rem;
+  font-style: italic;
+}
+
+/* Centrage optionnel d’un formulaire (ajoute la classe .centeredForm) */
+.centeredForm {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left; /* garde les labels alignés à gauche */
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  form {
+    width: 90%;
+    padding: 1rem;
+  }
+}

@@ -8,11 +8,11 @@ import { InscriptionComponent } from './inscription/inscription.component';
 import { AuthentificationComponent } from './authentification/authentification.component';
 import { ProfilComponent} from './profil/profil.component';
 import { AuthGuard } from './authentification/auth.guard';
-import { CovoiturageDetailComponent} from './covoiturage-detail/covoiturage-detail.component'
+import { CovoiturageDetailComponent } from './covoiturage-detail/covoiturage-detail.component'
+import { SaisieCovoiturageComponent } from './saisie-covoiturage/saisie-covoiturage.component';
 
 const routes: Routes = [
   { path: 'home', component: AppComponent },
-  //{ path: 'accueil', component: AccueilComponent, canActivate: [AuthGuard] },
   { path: 'accueil', component: AccueilComponent },
   { path: 'itineraireform', component: ItineraireformComponent },
   { path: 'itinerairevue', component: ItinerairevueComponent },
@@ -20,6 +20,7 @@ const routes: Routes = [
   { path: 'login', component: AuthentificationComponent },
   { path: 'profil', component: ProfilComponent, canActivate: [AuthGuard] },
   { path: 'covoiturage/:id', component: CovoiturageDetailComponent },
+  { path: 'saisie/:id', component: SaisieCovoiturageComponent, canActivate: [AuthGuard] },
   { path: '', redirectTo: '/accueil', pathMatch: 'full' } // Redirige vers la page1 par défaut];
 ];
 
