@@ -12,6 +12,8 @@ import { AuthentificationComponent } from './authentification/authentification.c
 import { TokenInterceptor } from './authentification/token.interceptor';
 import { ProfilComponent } from './profil/profil.component';
 import { CovoiturageDetailComponent } from './covoiturage-detail/covoiturage-detail.component';
+import { SaisieCovoiturageComponent } from './saisie-covoiturage/saisie-covoiturage.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -22,10 +24,11 @@ import { CovoiturageDetailComponent } from './covoiturage-detail/covoiturage-det
     InscriptionComponent,
     AuthentificationComponent,
     ProfilComponent,
-    CovoiturageDetailComponent
+    CovoiturageDetailComponent,
+    SaisieCovoiturageComponent
   ],
   imports: [
-    BrowserModule, HttpClientModule,
+    BrowserModule, HttpClientModule, ReactiveFormsModule,
     AppRoutingModule, FormsModule
   ],
   providers: [

@@ -207,5 +207,36 @@ public class CovoiturageService
         await command.ExecuteNonQueryAsync();
     }
 
+    public async Task AjouterCovoiturageAsync(AjouterCovoiturageRequest request)
+    {
+        using var connection = new MySqlConnection(_connectionString);
+        await connection.OpenAsync();
+
+        var command = new MySqlCommand(@"
+            INSERT INTO covoiturage (
+                date_depart, heure_depart, lieu_depart,
+                date_arrivee, heure_arrivee, lieu_arrivee,
+                statut, nb_place, prix_personne, voiture_id
+            )
+            VALUES (
+                @dateDepart, @heureDepart, @lieuDepart,
+                @dateArrivee, @heureArrivee, @lieuArrivee,
+                @statut, @nbPlace, @prix, @voitureId);", connection);
+
+        command.Parameters.AddWithValue("@dateDepart", request.DateDepart.ToString("yyyy-MM-dd"));
+        command.Parameters.AddWithValue("@heureDepart", request.HeureDepart.ToString(@"hh\:mm\:ss"));
+        command.Parameters.AddWithValue("@lieuDepart", request.LieuDepart);
+
+        command.Parameters.AddWithValue("@dateArrivee", request.DateArrivee);
+        command.Parameters.AddWithValue("@heureArrivee", request.HeureArrivee);
+        command.Parameters.AddWithValue("@lieuArrivee", request.LieuArrivee);
+
+        command.Parameters.AddWithValue("@statut", "ouvert");
+        command.Parameters.AddWithValue("@nbPlace", request.NbPlace);
+        command.Parameters.AddWithValue("@prix", request.PrixPersonne.ToString("F2", CultureInfo.InvariantCulture));
+        command.Parameters.AddWithValue("@voitureId", request.VoitureId);
+
+        await command.ExecuteNonQueryAsync();
+    }
 
 }

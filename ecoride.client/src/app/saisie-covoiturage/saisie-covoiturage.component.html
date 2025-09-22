@@ -1,0 +1,89 @@
+<form [formGroup]="covoiturageForm" class="centeredForm" (ngSubmit)="onSubmit()">
+
+  <label>Date départ:</label>
+  <input type="date" formControlName="dateDepart" />
+  <div *ngIf="covoiturageForm.get('dateDepart')?.invalid && covoiturageForm.get('dateDepart')?.touched">
+    Date départ requise.
+  </div>
+  <br />
+
+  <label>Heure départ:</label>
+  <input type="time" formControlName="heureDepart" />
+  <div *ngIf="covoiturageForm.get('heureDepart')?.invalid && covoiturageForm.get('heureDepart')?.touched">
+    Heure départ requise.
+  </div>
+  <br />
+
+  <label>Lieu départ:</label>
+  <input type="text" formControlName="lieuDepart" />
+  <div *ngIf="covoiturageForm.get('lieuDepart')?.invalid && covoiturageForm.get('lieuDepart')?.touched">
+    Lieu départ requis.
+  </div>
+  <br />
+
+  <label>Date arrivée:</label>
+  <input type="date" formControlName="dateArrivee" />
+  <div *ngIf="covoiturageForm.get('dateArrivee')?.invalid && covoiturageForm.get('dateArrivee')?.touched">
+    Date arrivée requise.
+  </div>
+  <br />
+
+  <label>Heure arrivée:</label>
+  <input type="time" formControlName="heureArrivee" />
+  <div *ngIf="covoiturageForm.get('heureArrivee')?.invalid && covoiturageForm.get('heureArrivee')?.touched">
+    Heure arrivée requise.
+  </div>
+  <br />
+
+  <label>Lieu arrivée:</label>
+  <input type="text" formControlName="lieuArrivee" />
+  <div *ngIf="covoiturageForm.get('lieuArrivee')?.invalid && covoiturageForm.get('lieuArrivee')?.touched">
+    Lieu arrivée requis.
+  </div>
+  <br />
+
+  <label>Nombre de places:</label>
+  <input type="number" formControlName="nbPlace" min="1" />
+  <div *ngIf="covoiturageForm.get('nbPlace')?.invalid && covoiturageForm.get('nbPlace')?.touched">
+    Veuillez entrer au moins 1 place.
+  </div>
+  <br />
+
+  <label>Prix par personne (€):</label>
+  <input type="number" formControlName="prixPersonne" min="0" step="0.01" />
+  <div *ngIf="covoiturageForm.get('prixPersonne')?.invalid && covoiturageForm.get('prixPersonne')?.touched">
+    Prix valide requis.
+  </div>
+  <br />
+
+  <!-- Sélection de la voiture -->
+  <label for="voiture">Voiture :</label>
+  <select id="voiture" formControlName="voitureId" (change)="onVoitureChange($event)">
+    <option *ngFor="let voiture of voituresUtilisateur" [value]="voiture.id">
+      {{ voiture.marque }} {{ voiture.modele }} ({{ voiture.immatriculation }})
+    </option>
+    <option value="autre">Autre...</option>
+  </select>
+  <br />
+
+  <!-- Formulaire de nouvelle voiture si "autre" est sélectionné -->
+  <div *ngIf="ajoutNouvelleVoiture" [formGroup]="nouvelleVoitureGroup">
+    <label>Marque :</label>
+    <input type="text" formControlName="marque" />
+    <br />
+    <label>Modèle :</label>
+    <input type="text" formControlName="modele" />
+    <br />
+    <label>Immatriculation :</label>
+    <input type="text" formControlName="immatriculation" />
+    <br />
+  </div>
+
+
+  <br />
+
+  <button type="submit" [disabled]="loading">Ajouter</button>
+
+</form>
+
+<div *ngIf="message" class="error-message">{{ message }}</div>

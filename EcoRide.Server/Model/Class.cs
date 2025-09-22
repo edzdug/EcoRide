@@ -54,6 +54,20 @@ namespace EcoRide.Server.Model
         public Preference PreferenceConducteur { get; set; }
     }
 
+    public class AjouterCovoiturageRequest
+    {
+        public DateTime DateDepart { get; set; }
+        public TimeSpan HeureDepart { get; set; }
+
+        public string LieuDepart { get; set; } 
+        public string DateArrivee { get; set; }
+        public string HeureArrivee { get; set; }
+        public string LieuArrivee { get; set; } 
+
+        public int NbPlace { get; set; }
+        public decimal PrixPersonne { get; set; }
+        public int VoitureId { get; set; }
+    }
 
 
     public class Utilisateur {
