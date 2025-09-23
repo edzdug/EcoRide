@@ -125,11 +125,12 @@ namespace EcoRide.Server.Controllers
         }
 
         [HttpPost("Ajouter")]
-        public async Task<IActionResult> Ajouter([FromBody] AjouterCovoiturageRequest request)
+        public async Task<IActionResult> Ajouter([FromBody] AjouterCovoiturageRequest request,[FromQuery] int utilisateurId )
         {
             try
             {
                 await _service.AjouterCovoiturageAsync(request);
+                await _serviceUser.RetirerCreditAsync(utilisateurId, 2);
                 return Ok(new { message = "Covoiturage ajouté avec succès !" });
             }
             catch (Exception ex)
