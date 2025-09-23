@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../authentification/auth.service'; // adapte le chemin si besoin
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -24,11 +25,12 @@ export class SaisieCovoiturageComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
-    const utilisateur = this.authService.currentUserValue; // remplace selon ton implémentation
+    const utilisateur = this.authService.currentUserValue; 
     if (utilisateur && utilisateur.id) {
       this.utilisateurId = utilisateur.id;
       this.initForm();
@@ -50,13 +52,22 @@ export class SaisieCovoiturageComponent implements OnInit {
       prixPersonne: [2, [Validators.required, Validators.min(0)]],
       voitureId: ['', Validators.required],
 
-      // Sous-formulaire voiture
+      /*// Sous-formulaire voiture
       nouvelleVoiture: this.fb.group({
-        marque: [''],
-        modele: [''],
-        immatriculation: ['']
-        // ajoute d'autres champs si besoin
-      })
+        modele: '',
+        immatriculation: '',
+        energie: '',
+        couleur: '',
+        date_premiere_immatriculation: '',
+        marque_id: 1,
+        nb_place: 0,
+        utilisateur_id: undefined,
+        preference: {
+          fumeur: false,
+          animal: false,
+          autre: ''
+        }
+      })*/
     });
   }
 
@@ -81,7 +92,8 @@ export class SaisieCovoiturageComponent implements OnInit {
     const value = select.value;
     this.ajoutNouvelleVoiture = value === 'autre';
     if (this.ajoutNouvelleVoiture) {
-      this.covoiturageForm.get('voitureId')?.setValue(null);
+      alert('Vous allez être redirigé vers votre profil pour ajouter une nouvelle voiture.');
+      this.router.navigate(['/profil']);
     }
   }
 
@@ -91,7 +103,7 @@ export class SaisieCovoiturageComponent implements OnInit {
     if (this.ajoutNouvelleVoiture) {
       const nouvelleVoitureData = this.covoiturageForm.get('nouvelleVoiture')?.value;
 
-      this.http.post(`/api/voiture/ajouter/${this.utilisateurId}`, nouvelleVoitureData).subscribe({
+      this.http.post('/api/Profil/voiture', nouvelleVoitureData).subscribe({
         next: (voiture: any) => {
           this.covoiturageForm.patchValue({ voitureId: voiture.id });
           this.envoyerCovoiturage();
@@ -111,7 +123,7 @@ export class SaisieCovoiturageComponent implements OnInit {
   envoyerCovoiturage() {
     const covoiturage = this.covoiturageForm.value;
 
-    this.http.post('/api/Covoiturage/Ajouter', covoiturage, { responseType: 'text' }).subscribe({
+    this.http.post(`/api/Covoiturage/Ajouter?utilisateurId=${this.utilisateurId}`, covoiturage, { responseType: 'text' }).subscribe({
       next: (res) => {
         this.message = res;  // Affiche le message texte retourné par l'API
         this.covoiturageForm.reset();
