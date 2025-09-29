@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router'; // ⬅️ Pour récupérer l'ID depuis l'URL
 
 interface Covoiturage {
-  id?: number;
+  id: number;
   dateDepart: string;
   heureDepart: string;
   lieuDepart: string;
@@ -24,6 +24,7 @@ interface Covoiturage {
 export class HistoriqueComponent {
   covoiturages: Covoiturage[] = [];
   utilisateurId!: number;
+  isChauffeurMap: { [covoiturageId: number]: boolean } = {};
 
   constructor(private http: HttpClient, private route: ActivatedRoute) { }
 
@@ -46,6 +47,7 @@ export class HistoriqueComponent {
           this.covoiturages = data.sort((a, b) =>
             new Date(b.dateDepart).getTime() - new Date(a.dateDepart).getTime()
           );
+          this.covoiturages.forEach(c => this.checkIsChauffeur(c.id!));
           console.log("Données reçues : ", this.covoiturages);
         },
         (error) => {
@@ -72,5 +74,46 @@ export class HistoriqueComponent {
         }
       });
   }
+
+  demarrerCovoiturage(covoiturageId: number) {
+    const covoiturage = this.covoiturages.find(c => c.id === covoiturageId);
+    if (!covoiturage) return;
+
+    this.http.post(`/api/Covoiturage/Demarrer`, covoiturage.id).subscribe({
+      next: () => {
+        console.log('Statut mis à jour : covoiturage démarré');
+        covoiturage.statut = 'en_cours';
+      },
+      error: (err) => console.error('Erreur lors de la mise à jour', err)
+    });
+  }
+
+  arriverCovoiturage(covoiturageId: number) {
+    const covoiturage = this.covoiturages.find(c => c.id === covoiturageId);
+    if (!covoiturage) return;
+
+    this.http.post(`/api/Covoiturage/Arriver`, covoiturage.id).subscribe({
+      next: () => {
+        console.log('Statut mis à jour : covoiturage arrivé');
+        covoiturage.statut = 'arriver';
+      },
+      error: (err) => console.error('Erreur lors de la mise à jour', err)
+    });
+  }
+
+  checkIsChauffeur(covoiturageId: number): void {
+    this.http.get<{ isChauffeur: boolean }>(
+      `/api/Covoiturage/isChauffeur/${covoiturageId}/utilisateur/${this.utilisateurId}`
+    ).subscribe({
+      next: (res) => {
+        this.isChauffeurMap[covoiturageId] = res.isChauffeur;
+      },
+      error: (err) => {
+        console.error(`Erreur lors de la vérification chauffeur pour ${covoiturageId}`, err);
+        this.isChauffeurMap[covoiturageId] = false;
+      }
+    });
+  }
+
 
 }

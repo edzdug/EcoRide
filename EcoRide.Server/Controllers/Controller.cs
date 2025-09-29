@@ -217,7 +217,60 @@ namespace EcoRide.Server.Controllers
             }
         }
 
+        // Vérifie si l'utilisateur est chauffeur du covoiturage
+        [HttpGet("isChauffeur/{covoiturageId}/utilisateur/{utilisateurId}")]
+        public async Task<IActionResult> IsChauffeur( int covoiturageId, int utilisateurId)
+        {
+            bool isChauffeur = await _serviceUser.IsChauffeurAsync(covoiturageId, utilisateurId);
+            return Ok(new { isChauffeur });
+        }
 
+        // Démarrer le covoiturage
+        [HttpPost("Demarrer")]
+        public async Task<IActionResult> DemarrerCovoiturage([FromBody] int covoiturageId)
+        {
+            try
+            {
+                // Vérifie que le covoiturage existe 
+                var covoiturage = await _service.GetByIdAsync(covoiturageId);
+                if (covoiturage == null)
+                    return NotFound($"Covoiturage avec l'ID {covoiturageId} non trouvé.");
+
+                // Mise à jour du statut
+                await _service.updateStateCovoiturage(covoiturageId, "en_cours");
+
+                return Ok(new { message = "Covoiturage démarré avec succès." });
+            }
+            catch (Exception ex)
+            {
+                // Log si tu as un logger
+                return StatusCode(500, new { message = "Erreur serveur", details = ex.Message });
+            }
+        }
+
+        // Arriver à destination
+        [HttpPost("Arriver")]
+        public async Task<IActionResult> ArriverCovoiturage([FromBody] int covoiturageId)
+        {
+            try
+            {
+                // Vérifie que le covoiturage existe 
+                var covoiturage = await _service.GetByIdAsync(covoiturageId);
+                if (covoiturage == null)
+                    return NotFound($"Covoiturage avec l'ID {covoiturageId} non trouvé.");
+
+                // Mise à jour du statut
+                await _service.updateStateCovoiturage(covoiturageId, "arriver");
+                await _emailService.EnvoyerEmailRetourAvisAsync(covoiturageId);
+
+                return Ok(new { message = "Covoiturage arrivé avec succès." });
+            }
+            catch (Exception ex)
+            {
+                // Log si tu as un logger
+                return StatusCode(500, new { message = "Erreur serveur", details = ex.Message });
+            }
+        }
     }
 
     [ApiController]
@@ -275,6 +328,21 @@ namespace EcoRide.Server.Controllers
             // CreatedAtAction nécessite que tu aies une méthode "GetById" accessible
             return CreatedAtAction(nameof(GetById), new { id = insertedId }, utilisateurDto);
 
+        }
+
+        [HttpPost("Avis/Envoyer/{utilisateurId}/{covoiturageId}")]
+        public async Task<ActionResult<Avis>> PostAvisAsync([FromBody] AvisDto dto, int utilisateurId, int covoiturageId)
+        {
+            try
+            {
+                await _service.EnvoieAvisAsync(dto, covoiturageId, utilisateurId);
+                return Ok(new { message = "Avis ajouté avec succès dans temp_avis." });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erreur lors de l'ajout de l'avis :", ex.Message);
+                return StatusCode(500, "Une erreur est survenue lors de l'enregistrement de l'avis.");
+            }
         }
     }
 

@@ -352,4 +352,22 @@ public class CovoiturageService
         }
     }
 
+    public async Task updateStateCovoiturage(int covoiturageId, string etat)
+    {
+        using var connection = new MySqlConnection(_connectionString);
+        await connection.OpenAsync();
+        using var etat_voyage = await connection.BeginTransactionAsync();
+
+        var updateStatusCommand = new MySqlCommand(@"
+            UPDATE covoiturage 
+            SET statut = @etat 
+            WHERE covoiturage_id = @covoiturageId;",
+                connection, (MySqlTransaction)etat_voyage);
+
+        updateStatusCommand.Parameters.AddWithValue("@covoiturageId", covoiturageId);
+        updateStatusCommand.Parameters.AddWithValue("@etat", etat);
+        await updateStatusCommand.ExecuteNonQueryAsync();
+
+        await etat_voyage.CommitAsync();
+    }
 }

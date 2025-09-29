@@ -299,4 +299,22 @@ public class UtilisateurService
         }
     }
 
+    public async Task EnvoieAvisAsync(AvisDto dto, int covoiturageId, int utilisateurId)
+    {
+        using var connection = new MySqlConnection(_connectionString);
+        await connection.OpenAsync();
+
+        var command = new MySqlCommand(@"
+        INSERT INTO temp_avis (commentaire, note, statut, utilisateur_id, covoiturage_id)
+        VALUES (@commentaire, @note, @statut, @utilisateurId, @covoiturageId);", connection);
+
+        command.Parameters.AddWithValue("@commentaire", dto.Commentaire ?? "");
+        command.Parameters.AddWithValue("@note", dto.Note ?? "");
+        command.Parameters.AddWithValue("@statut", "non_valider");
+        command.Parameters.AddWithValue("@utilisateurId", utilisateurId);
+        command.Parameters.AddWithValue("@covoiturageId", covoiturageId);
+
+        await command.ExecuteNonQueryAsync();
+    }
+
 }

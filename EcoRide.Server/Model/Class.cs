@@ -174,7 +174,7 @@ namespace EcoRide.Server.Model
     public class Avis
     {
         public int? Id { get; set; }
-        public string Commentaire { get; set; }
+        public string? Commentaire { get; set; }
         public int Note { get; set; }
         public string Statut { get; set; }
 
@@ -183,6 +183,13 @@ namespace EcoRide.Server.Model
     {
         public string? Note { get; set; }
         public string? Commentaire { get; set; }
+    }
+
+    public class TempAvis
+    {
+        public Avis avis { get; set; }
+        public int utilisateur_id { get; set; }
+        public int covoiturage_id { get; set; }
     }
 
     public class Depose
