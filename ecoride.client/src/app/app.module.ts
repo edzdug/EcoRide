@@ -15,6 +15,7 @@ import { CovoiturageDetailComponent } from './covoiturage-detail/covoiturage-det
 import { SaisieCovoiturageComponent } from './saisie-covoiturage/saisie-covoiturage.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HistoriqueComponent } from './historique/historique.component';
+import { SaisieAvisComponent } from './saisie-avis/saisie-avis.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { HistoriqueComponent } from './historique/historique.component';
     ProfilComponent,
     CovoiturageDetailComponent,
     SaisieCovoiturageComponent,
-    HistoriqueComponent
+    HistoriqueComponent,
+    SaisieAvisComponent,
   ],
   imports: [
     BrowserModule, HttpClientModule, ReactiveFormsModule,

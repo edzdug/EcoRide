@@ -1,0 +1,30 @@
+<h2 style="text-align: center; margin-top: 2rem;">Saisir votre avis</h2>
+
+<div class="mb-3">
+  <a [routerLink]="['/historique',user.id]">Retour à l'historique</a>
+</div>
+
+<form #profilForm="ngForm" class="centeredForm" (ngSubmit)="submit()" novalidate>
+
+  <!-- Note -->
+  <div class="form-group">
+    <label for="note">Note (1 à 5)</label>
+    <select id="note" class="form-control" name="note" [(ngModel)]="avis.note" required>
+      <option value="" disabled selected>Choisissez une note</option>
+      <option *ngFor="let n of [1,2,3,4,5]" [value]="n">{{n}}</option>
+    </select>
+  </div>
+
+  <!-- Commentaire -->
+  <div class="form-group" style="margin-top: 1rem;">
+    <label for="commentaire">Commentaire</label>
+    <textarea id="commentaire"
+              class="form-control"
+              name="commentaire"
+              [(ngModel)]="avis.commentaire"
+              rows="4"
+              placeholder="Partagez votre expérience..."></textarea>
+  </div>
+
+  <button type="submit">Valider</button>
+</form>

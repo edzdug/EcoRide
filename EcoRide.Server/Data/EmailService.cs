@@ -64,6 +64,55 @@ public class EmailService
         }
     }
 
+    public async Task EnvoyerEmailRetourAvisAsync(int covoiturageId)
+    {
+        var participantsEmails = await GetEmailsParticipantsAsync(covoiturageId);
+        if (participantsEmails.Count == 0)
+            return;
+
+        var covoiturage = await _covoiturageService.GetByIdAsync(covoiturageId);
+        if (covoiturage == null)
+        {
+            Console.WriteLine($"Covoiturage ID {covoiturageId} introuvable.");
+            return;
+        }
+
+        string corpsMessage = $"\r\nBonjour,\r\n\r\nVotre covoiturage du {covoiturage.DateDepart:dddd d MMMM yyyy} de {covoiturage.LieuDepart} à {covoiturage.LieuArrivee} vient d'être marqué comme terminé." +
+            $"\r\n\r\nMerci de vous connecter à votre espace personnel pour confirmer que tout s’est bien passé." +
+            $"\r\n\r\nCela nous permet de créditer le chauffeur et de recueillir vos retours via un système de note et d'avis." +
+            $"\r\n\r\nEn cas de problème, vous pouvez également signaler un incident pour qu’un membre de notre équipe vous accompagne." +
+            $"\r\n\r\nMerci pour votre confiance.\r\n\r\n– L’équipe EcoRide\r\n";
+
+        using var smtpClient = new SmtpClient(_smtp.Host, _smtp.Port)
+        {
+            Credentials = new NetworkCredential(_smtp.Username, _smtp.Password),
+            EnableSsl = _smtp.EnableSsl
+        };
+
+        foreach (var email in participantsEmails)
+        {
+            using var mail = new MailMessage
+            {
+                From = new MailAddress(_smtp.Username, "Covoiturage App"),
+                Subject = "Annulation de votre covoiturage",
+                Body = corpsMessage,
+                IsBodyHtml = false
+            };
+
+            mail.To.Add(email);
+
+            try
+            {
+                await smtpClient.SendMailAsync(mail);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erreur d’envoi à {email} : {ex}");
+                // Continue l'envoi pour les autres
+            }
+        }
+    }
+
     // Méthode utilitaire pour récupérer les emails
     private async Task<List<string>> GetEmailsParticipantsAsync(int covoiturageId)
     {
