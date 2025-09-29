@@ -235,5 +235,68 @@ public class UtilisateurService
         await command.ExecuteNonQueryAsync();
     }
 
+    public async Task<bool> IsChauffeurAsync(int covoiturageId, int utilisateurId)
+    {
+        using var connection = new MySqlConnection(_connectionString);
+        await connection.OpenAsync();
+
+        var command = new MySqlCommand(@"
+        SELECT COUNT(*) FROM covoiturage c
+        JOIN voiture v ON c.voiture_id = v.voiture_id
+        WHERE c.covoiturage_id = @covoiturageId AND v.utilisateur_id = @utilisateurId;", connection);
+
+        command.Parameters.AddWithValue("@covoiturageId", covoiturageId);
+        command.Parameters.AddWithValue("@utilisateurId", utilisateurId);
+
+        var result = Convert.ToInt32(await command.ExecuteScalarAsync());
+        return result > 0;
+    }
+
+    public async Task RembourserCreditAsync(int utilisateurId, int covoiturageId)
+    {
+        using var connection = new MySqlConnection(_connectionString);
+        await connection.OpenAsync();
+        using var transaction = await connection.BeginTransactionAsync();
+
+        try
+        {
+            // 1. Récupérer le prix_personne du covoiturage
+            var prixCommand = new MySqlCommand(@"
+            SELECT prix_personne 
+            FROM covoiturage 
+            WHERE covoiturage_id = @covoiturageId",
+                connection, (MySqlTransaction)transaction);
+
+            prixCommand.Parameters.AddWithValue("@covoiturageId", covoiturageId);
+
+            var prixObj = await prixCommand.ExecuteScalarAsync();
+            if (prixObj == null)
+                throw new Exception("Covoiturage non trouvé.");
+
+            // ⚠️ Si le champ est VARCHAR, on doit parser le prix
+            var prix = Convert.ToDecimal(prixObj.ToString(), CultureInfo.InvariantCulture);
+
+            // 2. Ajouter le montant au crédit du passager
+            var updateCommand = new MySqlCommand(@"
+    UPDATE parametre p
+    JOIN configuration c ON p.configuration_id = c.configuration_id
+    SET p.valeur = CAST(CAST(p.valeur AS DECIMAL(10,2)) + @montant AS CHAR)
+    WHERE c.utilisateur_id = @utilisateurId AND p.propriete = 'credit';",
+    connection, (MySqlTransaction)transaction);
+
+
+            updateCommand.Parameters.AddWithValue("@montant", prix);
+            updateCommand.Parameters.AddWithValue("@utilisateurId", utilisateurId);
+
+            await updateCommand.ExecuteNonQueryAsync();
+
+            await transaction.CommitAsync();
+        }
+        catch (Exception)
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
+    }
 
 }
