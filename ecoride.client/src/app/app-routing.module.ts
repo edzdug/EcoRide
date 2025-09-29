@@ -10,6 +10,7 @@ import { ProfilComponent} from './profil/profil.component';
 import { AuthGuard } from './authentification/auth.guard';
 import { CovoiturageDetailComponent } from './covoiturage-detail/covoiturage-detail.component'
 import { SaisieCovoiturageComponent } from './saisie-covoiturage/saisie-covoiturage.component';
+import { HistoriqueComponent } from './historique/historique.component'
 
 const routes: Routes = [
   { path: 'home', component: AppComponent },
@@ -21,6 +22,7 @@ const routes: Routes = [
   { path: 'profil', component: ProfilComponent, canActivate: [AuthGuard] },
   { path: 'covoiturage/:id', component: CovoiturageDetailComponent },
   { path: 'saisie/:id', component: SaisieCovoiturageComponent, canActivate: [AuthGuard] },
+  { path: 'historique/:id', component: HistoriqueComponent, canActivate: [AuthGuard] },
   { path: '', redirectTo: '/accueil', pathMatch: 'full' } // Redirige vers la page1 par défaut];
 ];
 

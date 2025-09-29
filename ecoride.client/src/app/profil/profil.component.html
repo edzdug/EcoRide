@@ -3,12 +3,16 @@
 <div class="mb-3">
   <a [routerLink]="['/saisie',user.id]">Saisir un voyage</a>
 </div>
+<br />
+<div class="mb-3">
+  <a [routerLink]="['/historique',user.id]">Voir votre historique</a>
+</div>
 
 <form #profilForm="ngForm" class="centeredForm" (ngSubmit)="submit()" novalidate>
 
   <h3>Sélectionnez votre/vos rôle(s)</h3>
-  <label>Passager</label><input type="checkbox" [(ngModel)]="isPassager" name="passager"> 
-  <label>Chauffeur</label><input type="checkbox" [(ngModel)]="isChauffeur" name="chauffeur"> 
+  <label>Passager</label><input type="checkbox" [(ngModel)]="isPassager" name="passager">
+  <label>Chauffeur</label><input type="checkbox" [(ngModel)]="isChauffeur" name="chauffeur">
 
   <div *ngIf="isChauffeur">
     <h3>Informations sur le véhicule</h3>
@@ -64,9 +68,9 @@
     </label>
 
     <h4>Préférences</h4>
-    <label>Fumeur acceptés</label><input type="checkbox" [(ngModel)]="voiture.preference.fumeur" name="fumeur"> 
+    <label>Fumeur acceptés</label><input type="checkbox" [(ngModel)]="voiture.preference.fumeur" name="fumeur">
     <br />
-    <label>Animaux acceptés</label><input type="checkbox" [(ngModel)]="voiture.preference.animal" name="animal"> 
+    <label>Animaux acceptés</label><input type="checkbox" [(ngModel)]="voiture.preference.animal" name="animal">
     <br />
     <input placeholder="Autres préférences" [(ngModel)]="voiture.preference.autre" name="autre">
   </div>

@@ -16,6 +16,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
         builder.Configuration.GetConnectionString("DefaultConnection"),
         ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))
     ));
+builder.Services.Configure<SmtpSettings>(
+    builder.Configuration.GetSection("SmtpSettings"));
+
+builder.Services.AddTransient<EmailService>();
 builder.Services.AddScoped<CovoiturageService>();
 builder.Services.AddScoped<UtilisateurService>();
 builder.Services.AddScoped<RoleService>();

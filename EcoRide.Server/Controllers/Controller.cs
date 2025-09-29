@@ -73,12 +73,17 @@ namespace EcoRide.Server.Controllers
         private readonly CovoiturageService _service;
         private readonly UtilisateurService _serviceUser;
         private readonly ParticipationService _serviceParticipation;
+        private readonly EmailService _emailService;
+        private readonly VoitureService _voitureService;
 
-        public CovoiturageController(CovoiturageService service, UtilisateurService serviceUser, ParticipationService serviceParticipation)
+        public CovoiturageController(CovoiturageService service, UtilisateurService serviceUser, 
+            ParticipationService serviceParticipation, EmailService emailService, VoitureService voitureService)
         {
             _service = service;
             _serviceUser = serviceUser;
             _serviceParticipation = serviceParticipation;
+            _emailService = emailService;
+            _voitureService = voitureService;
         }
 
         [HttpGet("GetItiniraireAll")]
@@ -138,6 +143,81 @@ namespace EcoRide.Server.Controllers
                 return StatusCode(500, $"Erreur lors de l’ajout : {ex.Message}");
             }
         }
+
+        [HttpGet("GetHistorique/{id}")]
+        public async Task<ActionResult<List<Covoiturage>>> GetHistorique(int id)
+        {
+            var covoiturages = new List<Covoiturage>();
+
+            // 1. Récupérer les covoiturages en tant que passager
+            var participations = await _serviceParticipation.RechercheParticipationAsync(id);
+            foreach (var covoiturageId in participations)
+            {
+                var covoiturage = await _service.GetByIdAsync(covoiturageId);
+                if (covoiturage != null)
+                {
+                    covoiturages.Add(covoiturage);
+                }
+            }
+
+            // 2. Récupérer toutes les voitures de l'utilisateur (chauffeur)
+            var voitures = await _voitureService.GetVoituresByUtilisateurIdAsync(id);
+            var voitureIds = voitures.Select(v => v.Id).ToList();
+
+            // 3. Récupérer tous les covoiturages créés avec ces voitures
+            foreach (var voitureId in voitureIds)
+            {
+                var covoituragesChauffeur = await _service.GetByVoitureIdAsync((int)voitureId);
+                covoiturages.AddRange(covoituragesChauffeur);
+            }
+
+            // 4. Supprimer les doublons (ex: s'il est à la fois passager et conducteur d’un même trajet)
+            var covoituragesUniques = covoiturages
+                .GroupBy(c => c.Id)
+                .Select(g => g.First())
+                .ToList();
+
+            // 5. Trier du plus récent au plus ancien (optionnel)
+            var sorted = covoituragesUniques.OrderByDescending(c => c.DateDepart).ToList();
+
+            return Ok(sorted);
+        }
+
+
+        [HttpDelete("Annuler/{covoiturageId}/utilisateur/{utilisateurId}")]
+        public async Task<IActionResult> Annuler(int covoiturageId, int utilisateurId)
+        {
+            try
+            {
+                var covoiturage = await _service.GetByIdAsync(covoiturageId);
+                if (covoiturage == null)
+                    return NotFound("Covoiturage non trouvé.");
+
+                // Vérifie si c'est le chauffeur
+                var isChauffeur = await _serviceUser.IsChauffeurAsync(covoiturageId, utilisateurId);
+
+                if (isChauffeur)
+                {
+                    // 1. Annulation par le chauffeur => supprimer le covoiturage
+                    await _emailService.EnvoyerEmailAuxParticipantsAsync(covoiturageId);
+                    await _service.AnnulerCovoiturageParChauffeurAsync(covoiturageId, utilisateurId);
+                }
+                else
+                {
+                    // 2. Annulation par un participant
+                    await _serviceParticipation.AnnulerParticipationAsync(covoiturageId, utilisateurId);
+                    await _serviceUser.RembourserCreditAsync(utilisateurId, utilisateurId); 
+                }
+
+                return Ok(new { message = "Annulation effectuée avec succès." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erreur : {ex.Message}");
+            }
+        }
+
+
     }
 
     [ApiController]

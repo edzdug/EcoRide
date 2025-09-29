@@ -1,0 +1,48 @@
+
+<h2 style="text-align: center; margin-top: 2rem;">Historique de vos covoiturages</h2>
+
+<form class="centeredForm" *ngIf="covoiturages.length > 0; else aucunResultat">
+  <div *ngFor="let covoiturage of covoiturages" style="margin-bottom: 2rem; border-bottom: 1px solid #ddd; padding-bottom: 1.5rem;">
+
+    <label>Date de départ :</label>
+    <input type="text" [value]="covoiturage.dateDepart | date:'fullDate'" disabled>
+
+    <label>Heure de départ :</label>
+    <input type="text" [value]="covoiturage.heureDepart" disabled>
+
+    <label>Lieu de départ :</label>
+    <input type="text" [value]="covoiturage.lieuDepart" disabled>
+
+    <label>Date d’arrivée :</label>
+    <input type="text" [value]="covoiturage.dateArrivee" disabled>
+
+    <label>Heure d’arrivée :</label>
+    <input type="text" [value]="covoiturage.heureArrivee" disabled>
+
+    <label>Lieu d’arrivée :</label>
+    <input type="text" [value]="covoiturage.lieuArrivee" disabled>
+
+    <label>Nombre de places :</label>
+    <input type="text" [value]="covoiturage.nbPlace" disabled>
+
+    <label>Prix par personne :</label>
+    <input type="text" [value]="covoiturage.prixPersonne + ' €'" disabled>
+
+    <label>Statut :</label>
+    <input type="text" [value]="covoiturage.statut || 'N/A'" disabled>
+
+    <button type="button"
+            (click)="annulerCovoiturage(covoiturage.id)"
+            [disabled]="covoiturage.statut === 'annuler'"
+            style="background-color: #d9534f; margin-top: 0.5rem;">
+      Annuler ce covoiturage
+    </button>
+
+  </div>
+</form>
+
+<ng-template #aucunResultat>
+  <p style="text-align: center; color: #888; margin-top: 3rem;">
+    Aucun covoiturage trouvé pour cet utilisateur.
+  </p>
+</ng-template>
