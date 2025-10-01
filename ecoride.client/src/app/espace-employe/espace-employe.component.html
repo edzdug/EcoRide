@@ -1,0 +1,51 @@
+<h2>Validation des avis</h2>
+
+<form class="centeredForm" *ngIf="tempAvisList.length > 0; else aucunResultat">
+
+  <div *ngFor="let item of tempAvisList">
+    <p><strong>Note :</strong> {{ item.avis.note }}/5</p>
+    <p><strong>Commentaire :</strong> {{ item.avis.commentaire }}</p>
+
+    <div style="display:flex;justify-content:space-between">
+      <button type="submit" (click)="valider(item.avis.id)" class="btn btn-success">Valider</button>
+      <button type="submit" (click)="refuser(item.avis.id)" class="btn btn-danger">Refuser</button>
+    </div>
+
+  </div>
+
+</form>
+
+<ng-template #aucunResultat>
+  <p style="text-align: center; color: #888; margin-top: 3rem;">
+    Aucun Avis à vérifier trouvé.
+  </p>
+</ng-template>
+
+
+<h2>Vue des covoiturages problématique</h2>
+
+<form class="centeredForm" *ngIf="problemeAvisList.length > 0; else aucunResultatPb">
+
+  <div *ngFor="let Pbitem of problemeAvisList">
+    <p><strong>Note :</strong> {{ Pbitem.avis.note }}/5</p>
+    <p><strong>Commentaire :</strong> {{ Pbitem.avis.commentaire }}</p>
+    <p><strong>Passager pseudo :</strong> {{ Pbitem.passager.pseudo }}</p>
+    <p><strong>Passager email :</strong> {{ Pbitem.passager.email }}</p>
+    <p><strong>Chauffeur pseudo :</strong> {{ Pbitem.chauffeur.pseudo }}</p>
+    <p><strong>Chauffeur email :</strong> {{ Pbitem.chauffeur.email }}</p>
+    <p><strong>Date de départ :</strong> {{ Pbitem.covoiturage.dateDepart | date: 'yyyy-MM-dd'}}</p>
+    <p><strong>Lieu de départ :</strong> {{ Pbitem.covoiturage.lieuDepart }}</p>
+    <p><strong>Date d'arrivé :</strong> {{ Pbitem.covoiturage.dateArrivee }}</p>
+    <p><strong>Lieu d'arrivé :</strong> {{ Pbitem.covoiturage.lieuArrivee }}</p>
+
+    <button type="submit" (click)="nouvelleValidation(Pbitem.avis.id)" class="btn btn-success">Valider</button>
+
+  </div>
+
+</form>
+
+<ng-template #aucunResultatPb>
+  <p style="text-align: center; color: #888; margin-top: 3rem;">
+    Aucun Covoiturage trouvé.
+  </p>
+</ng-template>

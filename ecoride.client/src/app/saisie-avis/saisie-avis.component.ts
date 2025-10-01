@@ -45,7 +45,7 @@ export class SaisieAvisComponent {
       commentaire: this.avis.commentaire
     };
 
-    this.http.post(`/api/Utilisateur/Avis/Envoyer/${this.utilisateurId}/${this.covoiturageId}`, avisDto)
+    this.http.post(`/api/Avis/Envoyer/${this.utilisateurId}/${this.covoiturageId}`, avisDto)
       .subscribe({
         next: () => {
           alert('Avis envoyé avec succès !');

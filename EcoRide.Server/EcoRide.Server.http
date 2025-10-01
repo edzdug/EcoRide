@@ -9,3 +9,23 @@ GET {{EcoRide.Server_HostAddress}}/Covoiturage/
 Accept: application/json
 
 ###
+
+GET {{EcoRide.Server_HostAddress}}/Utilisateur/
+Accept: application/json
+
+###
+
+GET {{EcoRide.Server_HostAddress}}/Profil/
+Accept: application/json
+
+###
+
+GET {{EcoRide.Server_HostAddress}}/Authentification/
+Accept: application/json
+
+###
+
+GET {{EcoRide.Server_HostAddress}}/Avis/
+Accept: application/json
+
+###

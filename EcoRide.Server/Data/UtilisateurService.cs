@@ -83,10 +83,10 @@ public class UtilisateurService
         var command = new MySqlCommand(@"
         INSERT INTO utilisateur (
             nom, prenom, email, password, telephone,
-            adresse, date_naissance, photo, pseudo
+            adresse, date_naissance, photo, pseudo, acces
         ) VALUES (
             @nom, @prenom, @email, @password, @telephone,
-            @adresse, @date_naissance, @photo, @pseudo
+            @adresse, @date_naissance, @photo, @pseudo, @acces
         );
         SELECT LAST_INSERT_ID();", connection);
 
@@ -118,6 +118,7 @@ public class UtilisateurService
         command.Parameters.AddWithValue("@date_naissance", utilisateur.DateNaissance);
         command.Parameters.AddWithValue("@photo", photoBytes ?? (object)DBNull.Value);
         command.Parameters.AddWithValue("@pseudo", utilisateur.Pseudo);
+        command.Parameters.AddWithValue("@acces", "utilisateur");
 
         // Exécuter l'insertion utilisateur
         var insertedId = Convert.ToInt32(await command.ExecuteScalarAsync());
@@ -188,7 +189,8 @@ public class UtilisateurService
                 Adresse = reader.GetString("adresse"),
                 DateNaissance = reader.GetString("date_naissance"),
                 Photo = reader["photo"] is DBNull ? null : Convert.ToBase64String((byte[])reader["photo"]),
-                Pseudo = reader.GetString("pseudo")
+                Pseudo = reader.GetString("pseudo"),
+                Acces = reader.GetString("acces")
             };
         }
 
@@ -299,22 +301,90 @@ public class UtilisateurService
         }
     }
 
-    public async Task EnvoieAvisAsync(AvisDto dto, int covoiturageId, int utilisateurId)
+    public async Task AjouterCreditChauffeurAsync(int covoiturageId)
     {
         using var connection = new MySqlConnection(_connectionString);
         await connection.OpenAsync();
 
-        var command = new MySqlCommand(@"
-        INSERT INTO temp_avis (commentaire, note, statut, utilisateur_id, covoiturage_id)
-        VALUES (@commentaire, @note, @statut, @utilisateurId, @covoiturageId);", connection);
+        using var transaction = await connection.BeginTransactionAsync();
 
-        command.Parameters.AddWithValue("@commentaire", dto.Commentaire ?? "");
-        command.Parameters.AddWithValue("@note", dto.Note ?? "");
-        command.Parameters.AddWithValue("@statut", "non_valider");
-        command.Parameters.AddWithValue("@utilisateurId", utilisateurId);
-        command.Parameters.AddWithValue("@covoiturageId", covoiturageId);
+        try
+        {
+            // Étape 1 : Récupérer le prix et l'utilisateur_id du chauffeur
+            var cmd = new MySqlCommand(@"
+            SELECT c.prix_personne, v.utilisateur_id
+            FROM covoiturage c
+            JOIN voiture v ON c.voiture_id = v.voiture_id
+            WHERE c.covoiturage_id = @covoiturageId;", connection, (MySqlTransaction)transaction);
 
-        await command.ExecuteNonQueryAsync();
+            cmd.Parameters.AddWithValue("@covoiturageId", covoiturageId);
+
+            string prixStr = "";
+            int chauffeurId = 0;
+
+            using (var reader = await cmd.ExecuteReaderAsync())
+            {
+                if (await reader.ReadAsync())
+                {
+                    prixStr = reader.GetString("prix_personne");
+                    chauffeurId = reader.GetInt32("utilisateur_id");
+                }
+                else
+                {
+                    throw new Exception("Covoiturage ou voiture non trouvé.");
+                }
+            }
+
+            if (!decimal.TryParse(prixStr.Replace(',', '.'), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out decimal prix))
+                throw new Exception("Format de prix_personne invalide.");
+
+            // Étape 2 : Récupérer configuration_id du chauffeur
+            var configCmd = new MySqlCommand(@"
+            SELECT configuration_id
+            FROM configuration
+            WHERE utilisateur_id = @chauffeurId;", connection, (MySqlTransaction)transaction);
+
+            configCmd.Parameters.AddWithValue("@chauffeurId", chauffeurId);
+            var configIdObj = await configCmd.ExecuteScalarAsync();
+
+            if (configIdObj == null)
+                throw new Exception("Configuration non trouvée pour le chauffeur.");
+
+            int configId = Convert.ToInt32(configIdObj);
+
+            // Étape 3 : Vérifier et mettre à jour / insérer le crédit
+            var getCreditCmd = new MySqlCommand(@"
+            SELECT valeur
+            FROM parametre
+            WHERE configuration_id = @configId AND propriete = 'credit';", connection, (MySqlTransaction)transaction);
+
+            getCreditCmd.Parameters.AddWithValue("@configId", configId);
+            var currentCreditObj = await getCreditCmd.ExecuteScalarAsync();
+
+                // Crédit existant → mise à jour
+                decimal currentCredit = decimal.Parse(currentCreditObj.ToString().Replace(',', '.'), System.Globalization.CultureInfo.InvariantCulture);
+                decimal newCredit = currentCredit + prix;
+
+                var updateCmd = new MySqlCommand(@"
+                UPDATE parametre
+                SET valeur = @newCredit
+                WHERE configuration_id = @configId AND propriete = 'credit';", connection, (MySqlTransaction)transaction);
+
+                updateCmd.Parameters.AddWithValue("@newCredit", newCredit.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                updateCmd.Parameters.AddWithValue("@configId", configId);
+
+                await updateCmd.ExecuteNonQueryAsync();
+            
+
+            await transaction.CommitAsync();
+        }
+        catch (Exception ex)
+        {
+            await transaction.RollbackAsync();
+            Console.WriteLine("Erreur crédit chauffeur : " + ex.Message);
+            throw;
+        }
     }
+
 
 }

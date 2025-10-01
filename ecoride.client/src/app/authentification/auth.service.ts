@@ -43,4 +43,16 @@ export class AuthService {
   get currentUserValue() {
     return this._userSubject.value;
   }
+
+  get access(): string | null {
+    return this._userSubject.value?.acces ?? null;
+  }
+
+  get isEmploye(): boolean {
+    return this.access === 'employe';
+  }
+
+  get isUtilisateur(): boolean {
+    return this.access === 'utilisateur';
+  }
 }

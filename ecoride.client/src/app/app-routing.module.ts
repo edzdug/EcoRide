@@ -8,10 +8,12 @@ import { InscriptionComponent } from './inscription/inscription.component';
 import { AuthentificationComponent } from './authentification/authentification.component';
 import { ProfilComponent} from './profil/profil.component';
 import { AuthGuard } from './authentification/auth.guard';
-import { CovoiturageDetailComponent } from './covoiturage-detail/covoiturage-detail.component'
+import { CovoiturageDetailComponent } from './covoiturage-detail/covoiturage-detail.component';
 import { SaisieCovoiturageComponent } from './saisie-covoiturage/saisie-covoiturage.component';
-import { HistoriqueComponent } from './historique/historique.component'
-import { SaisieAvisComponent } from './saisie-avis/saisie-avis.component'
+import { HistoriqueComponent } from './historique/historique.component';
+import { SaisieAvisComponent } from './saisie-avis/saisie-avis.component';
+import { EspaceEmployeComponent } from './espace-employe/espace-employe.component'
+import { EmployeGuard } from './authentification/employe.guard';
 
 const routes: Routes = [
   { path: 'home', component: AppComponent },
@@ -21,11 +23,12 @@ const routes: Routes = [
   { path: 'inscription', component: InscriptionComponent },
   { path: 'login', component: AuthentificationComponent },
   { path: 'profil', component: ProfilComponent, canActivate: [AuthGuard] },
+  { path: 'employe', component: EspaceEmployeComponent, canActivate: [EmployeGuard] },
   { path: 'covoiturage/:id', component: CovoiturageDetailComponent },
   { path: 'saisie/:id', component: SaisieCovoiturageComponent, canActivate: [AuthGuard] },
   { path: 'historique/:id', component: HistoriqueComponent, canActivate: [AuthGuard] },
   { path: 'saisie_avis/:id', component: SaisieAvisComponent, canActivate: [AuthGuard] },
-  { path: '', redirectTo: '/accueil', pathMatch: 'full' } // Redirige vers la page1 par défaut];
+  { path: '', redirectTo: '/accueil', pathMatch: 'full' } // Redirige vers la page par défaut];
 ];
 
 @NgModule({

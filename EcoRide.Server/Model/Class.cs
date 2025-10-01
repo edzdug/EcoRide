@@ -90,6 +90,8 @@ namespace EcoRide.Server.Model
         public string? Photo { get; set; }
 
         public string Pseudo { get; set; }
+
+        public string? Acces { get; set; }
     }
 
     public class UtilisateurDto
@@ -191,6 +193,15 @@ namespace EcoRide.Server.Model
         public int utilisateur_id { get; set; }
         public int covoiturage_id { get; set; }
     }
+
+    public class ProblemeAvis
+    {
+        public Avis avis { get; set; }
+        public UtilisateurDto passager { get; set; }
+        public UtilisateurDto chauffeur { get; set; }
+        public Covoiturage covoiturage { get; set; }
+    }
+
 
     public class Depose
     {
