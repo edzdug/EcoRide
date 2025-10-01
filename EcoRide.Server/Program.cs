@@ -19,6 +19,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.Configure<SmtpSettings>(
     builder.Configuration.GetSection("SmtpSettings"));
 
+builder.Services.AddTransient<AvisService>();
 builder.Services.AddTransient<EmailService>();
 builder.Services.AddScoped<CovoiturageService>();
 builder.Services.AddScoped<UtilisateurService>();

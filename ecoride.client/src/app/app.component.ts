@@ -21,20 +21,9 @@ export class AppComponent implements OnInit {
 
   constructor(private http: HttpClient, public authService: AuthService, private routes: ActivatedRoute, private router: Router) {}
 
-  ngOnInit() {
-    this.getForecasts();
-  }
+  ngOnInit() {}
 
-  getForecasts() {
-    this.http.get<WeatherForecast[]>('/weatherforecast').subscribe(
-      (result) => {
-        this.forecasts = result;
-      },
-      (error) => {
-        console.error(error);
-      }
-    );
-  }
+  
 
   logout() {
     this.authService.logout();

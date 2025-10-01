@@ -330,20 +330,7 @@ namespace EcoRide.Server.Controllers
 
         }
 
-        [HttpPost("Avis/Envoyer/{utilisateurId}/{covoiturageId}")]
-        public async Task<ActionResult<Avis>> PostAvisAsync([FromBody] AvisDto dto, int utilisateurId, int covoiturageId)
-        {
-            try
-            {
-                await _service.EnvoieAvisAsync(dto, covoiturageId, utilisateurId);
-                return Ok(new { message = "Avis ajouté avec succès dans temp_avis." });
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Erreur lors de l'ajout de l'avis :", ex.Message);
-                return StatusCode(500, "Une erreur est survenue lors de l'enregistrement de l'avis.");
-            }
-        }
+
     }
 
     [ApiController]
@@ -462,4 +449,95 @@ namespace EcoRide.Server.Controllers
             return Ok(id);
         }
     }
+
+    [ApiController]
+    [Route("api/[controller]")]
+    public class AvisController : ControllerBase
+    {
+        private readonly AvisService _service;
+        private readonly UtilisateurService _utilisateurService;
+
+        public AvisController(AvisService service, UtilisateurService utilisateurService)
+        {
+            _service = service;
+            _utilisateurService = utilisateurService;
+        }
+
+        [HttpPost("Envoyer/{utilisateurId}/{covoiturageId}")]
+        public async Task<ActionResult<Avis>> PostAvisAsync([FromBody] AvisDto dto, int utilisateurId, int covoiturageId)
+        {
+            try
+            {
+                await _service.EnvoieAvisAsync(dto, covoiturageId, utilisateurId);
+                return Ok(new { message = "Avis ajouté avec succès dans temp_avis." });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erreur lors de l'ajout de l'avis :", ex.Message);
+                return StatusCode(500, "Une erreur est survenue lors de l'enregistrement de l'avis.");
+            }
+        }
+
+        [HttpGet("Get/temp_avis")]
+        public async Task<IActionResult> GetAvisEnAttente()
+        {
+            var result = await _service.GetAvisEnAttenteAsync();
+            return Ok(result);
+        }
+
+        [HttpGet("Get/Refuse/temp_avis")]
+        public async Task<IActionResult> GetAvisRefuse()
+        {
+            var result = await _service.GetAvisRefuseAsync();
+            return Ok(result);
+        }
+
+        [HttpPost("Valider/temp_avis")]
+        public async Task<IActionResult> ValiderAvisEnAttente([FromBody] TempAvis temp_avis)
+        {
+            try
+            {
+                await _service.VerifAvisAsync(temp_avis, "valide");
+                await _utilisateurService.AjouterCreditChauffeurAsync(temp_avis.covoiturage_id);
+                return Ok(new { message = "Etat modifié avec succès en 'valide'." });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erreur lors de la modification de l'état :", ex.Message);
+                return StatusCode(500, "Une erreur est survenue lors de la modification de l'état.");
+            }
+        }
+
+        [HttpPost("Refuser/temp_avis")]
+        public async Task<IActionResult> RefuserAvisEnAttente([FromBody] TempAvis temp_avis)
+        {
+            try
+            {
+                await _service.VerifAvisAsync(temp_avis, "refuse");
+                return Ok(new { message = "Etat modifié avec succès en 'refuse'." });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erreur lors de la modification de l'état :", ex.Message);
+                return StatusCode(500, "Une erreur est survenue lors de la modification de l'état.");
+            }
+        }
+
+        [HttpPost("temp_avis_refuse/validation")]
+        public async Task<IActionResult> ValiderAvisRefuse([FromBody] ProblemeAvis pb_avis)
+        {
+            try
+            {
+                await _service.ValidePbAvisAsync(pb_avis);
+                await _utilisateurService.AjouterCreditChauffeurAsync((int)pb_avis.covoiturage.Id);
+                return Ok(new { message = "Etat modifié avec succès en 'valide'." });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erreur lors de la modification de l'état :", ex.Message);
+                return StatusCode(500, "Une erreur est survenue lors de la modification de l'état.");
+            }
+        }
+    }
+
 }

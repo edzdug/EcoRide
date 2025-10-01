@@ -16,6 +16,7 @@ import { SaisieCovoiturageComponent } from './saisie-covoiturage/saisie-covoitur
 import { ReactiveFormsModule } from '@angular/forms';
 import { HistoriqueComponent } from './historique/historique.component';
 import { SaisieAvisComponent } from './saisie-avis/saisie-avis.component';
+import { EspaceEmployeComponent } from './espace-employe/espace-employe.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { SaisieAvisComponent } from './saisie-avis/saisie-avis.component';
     SaisieCovoiturageComponent,
     HistoriqueComponent,
     SaisieAvisComponent,
+    EspaceEmployeComponent,
   ],
   imports: [
     BrowserModule, HttpClientModule, ReactiveFormsModule,

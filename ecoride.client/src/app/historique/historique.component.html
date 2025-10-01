@@ -31,40 +31,41 @@
     <label>Statut :</label>
     <input type="text" [value]="covoiturage.statut || 'N/A'" disabled>
 
-    <button type="submit"
-            (click)="annulerCovoiturage(covoiturage.id)"
-            [disabled]="covoiturage.statut === 'annuler' || covoiturage.statut === 'arriver'"
-            style="background-color: #d9534f; margin-top: 0.5rem;">
-      Annuler ce covoiturage
-    </button>
-
-    <!-- Affiche les boutons si l'utilisateur est le chauffeur -->
-    <div *ngIf="isChauffeurMap[covoiturage.id] === true">
-      <br />
+    <div style="display:flex;justify-content:space-between">
       <button type="submit"
-              *ngIf="covoiturage.statut === 'ouvert'"
-              (click)="demarrerCovoiturage(covoiturage.id)"
-              class="btn btn-primary">
-        Démarrer le voyage
+              (click)="annulerCovoiturage(covoiturage.id)"
+              [disabled]="covoiturage.statut === 'annuler' || covoiturage.statut === 'arriver'"
+              style="background-color: #d9534f; margin-top: 0.5rem;">
+        Annuler ce covoiturage
       </button>
 
-      <button type="submit"
-              *ngIf="covoiturage.statut === 'en_cours'"
-              (click)="arriverCovoiturage(covoiturage.id)"
-              class="btn btn-success">
-        Arrivée à destination
-      </button>
-    </div>
+      <!-- Affiche les boutons si l'utilisateur est le chauffeur -->
+      <div *ngIf="isChauffeurMap[covoiturage.id] === true">
+        <br />
+        <button type="submit"
+                *ngIf="covoiturage.statut === 'ouvert'"
+                (click)="demarrerCovoiturage(covoiturage.id)"
+                class="btn btn-primary">
+          Démarrer le voyage
+        </button>
 
-    <div *ngIf="isChauffeurMap[covoiturage.id] === false">
-      <br />
-      <button type="submit"
-              *ngIf="covoiturage.statut === 'arriver'"
-              [routerLink]="['/saisie_avis', covoiturage.id]"
-              class="btn btn-primary">
-        Donner un avis
-      </button>
+        <button type="submit"
+                *ngIf="covoiturage.statut === 'en_cours'"
+                (click)="arriverCovoiturage(covoiturage.id)"
+                class="btn btn-success">
+          Arrivée à destination
+        </button>
+      </div>
 
+      <div *ngIf="isChauffeurMap[covoiturage.id] === false">
+        <br />
+        <button type="submit"
+                *ngIf="covoiturage.statut === 'arriver'"
+                [routerLink]="['/saisie_avis', covoiturage.id]"
+                class="btn btn-primary">
+          Donner un avis
+        </button>
+      </div>
     </div>
 
   </div>
