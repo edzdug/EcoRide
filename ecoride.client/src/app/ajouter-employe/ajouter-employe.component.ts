@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component } from '@angular/core';
 
 type Form = {
   nom: string;
@@ -14,26 +13,14 @@ type Form = {
   pseudo: string;
 };
 
-@Injectable({ providedIn: 'root' })
-export class FormDataService {
-  private _form: Form | null = null;
-
-  setForm(form: Form) {
-    this._form = form;
-  }
-
-  getForm(): Form | null {
-    return this._form;
-  }
-}
 
 @Component({
-  selector: 'app-inscription',
+  selector: 'app-ajouter-employe',
   standalone: false,
-  templateUrl: './inscription.component.html',
-  styleUrl: './inscription.component.css'
+  templateUrl: './ajouter-employe.component.html',
+  styleUrl: './ajouter-employe.component.css'
 })
-export class InscriptionComponent {
+export class AjouterEmployeComponent {
   form: Form = {
     nom: "emma",
     prenom: "smith",
@@ -48,20 +35,18 @@ export class InscriptionComponent {
 
   constructor(
     private http: HttpClient,
-    private router: Router,
-    private formDataService: FormDataService
   ) { }
 
   async envoie() {
     if (this.form.photo) {
       const base64Photo = await blobToBase64(this.form.photo);
       const utilisateurToSend = { ...this.form, photo: base64Photo };
-      this.http.post('/api/utilisateur/PostUser?statut=utilisateur', utilisateurToSend).subscribe(response => {
-        console.log("Utilisateur créé :", response);
+      this.http.post('/api/utilisateur/PostUser?statut=employe', utilisateurToSend).subscribe(response => {
+        console.log("employé créé :", response);
       });
     } else {
-      this.http.post('/api/utilisateur/PostUser?statut=utilisateur', this.form).subscribe(response => {
-        console.log("Utilisateur créé :", response);
+      this.http.post('/api/utilisateur/PostUser?statut=employe', this.form).subscribe(response => {
+        console.log("employé créé :", response);
       });
     }
   }
@@ -86,5 +71,3 @@ function blobToBase64(blob: Blob): Promise<string> {
     reader.readAsDataURL(blob); // convertit le blob en data URI base64
   });
 }
-
-

@@ -14,6 +14,10 @@ import { HistoriqueComponent } from './historique/historique.component';
 import { SaisieAvisComponent } from './saisie-avis/saisie-avis.component';
 import { EspaceEmployeComponent } from './espace-employe/espace-employe.component'
 import { EmployeGuard } from './authentification/employe.guard';
+import { AdministrateurGuard } from './authentification/administrateur.guard';
+import { EspaceAdminComponent } from './espace-admin/espace-admin.component';
+import { AjouterEmployeComponent } from './/ajouter-employe/ajouter-employe.component';
+import { SuspendreUtilisateurComponent } from './suspendre-utilisateur/suspendre-utilisateur.component';
 
 const routes: Routes = [
   { path: 'home', component: AppComponent },
@@ -24,6 +28,9 @@ const routes: Routes = [
   { path: 'login', component: AuthentificationComponent },
   { path: 'profil', component: ProfilComponent, canActivate: [AuthGuard] },
   { path: 'employe', component: EspaceEmployeComponent, canActivate: [EmployeGuard] },
+  { path: 'admin', component: EspaceAdminComponent, canActivate: [AdministrateurGuard] },
+  { path: 'admin/ajouter-employe', component: AjouterEmployeComponent, canActivate: [AdministrateurGuard] },
+  { path: 'admin/suspendre/user&employe', component: SuspendreUtilisateurComponent, canActivate: [AdministrateurGuard] },
   { path: 'covoiturage/:id', component: CovoiturageDetailComponent },
   { path: 'saisie/:id', component: SaisieCovoiturageComponent, canActivate: [AuthGuard] },
   { path: 'historique/:id', component: HistoriqueComponent, canActivate: [AuthGuard] },

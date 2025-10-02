@@ -1,0 +1,45 @@
+<div class="mb-3">
+  <a routerLink="/admin">Retour à la page d'administration</a>
+</div>
+
+<h2>Gestion des utilisateurs</h2>
+
+<div *ngIf="isLoading">Chargement des utilisateurs...</div>
+<div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+
+<div class="search-bar">
+  <input type="text" placeholder="Rechercher par nom, pseudo ou email" [(ngModel)]="filtre" />
+</div>
+
+<table *ngIf="!isLoading && utilisateurs.length > 0" class="table-utilisateurs">
+  <thead>
+    <tr>
+      <th>Pseudo</th>
+      <th>Nom</th>
+      <th>Prénom</th>
+      <th>Email</th>
+      <th>Accès</th>
+      <th>Autorisation</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let utilisateur of utilisateursFiltres">
+      <td>{{ utilisateur.pseudo }}</td>
+      <td>{{ utilisateur.nom }}</td>
+      <td>{{ utilisateur.prenom }}</td>
+      <td>{{ utilisateur.email }}</td>
+      <td>{{ utilisateur.acces }}</td>
+      <td>{{ utilisateur.autorisation }}</td>
+      <td>
+        <button (click)="suspendreUtilisateur(utilisateur)">
+          {{ utilisateur.autorisation === 'suspendu' ? 'Réactiver' : 'Suspendre' }}
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<div *ngIf="!isLoading && utilisateurs.length === 0">
+  Aucun utilisateur trouvé.
+</div>

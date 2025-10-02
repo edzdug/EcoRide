@@ -1,4 +1,5 @@
 ﻿using EcoRide.Server.Model;
+using Microsoft.EntityFrameworkCore;
 using MySqlConnector;
 using System.Globalization;
 using System.Text.Json;
@@ -370,4 +371,103 @@ public class CovoiturageService
 
         await etat_voyage.CommitAsync();
     }
+
+    public async Task<List<CovoiturageStatistiqueParJour>> GetCovoituragesParJourAsync(int year, int month)
+    {
+        var result = new List<CovoiturageStatistiqueParJour>();
+
+        using var connection = new MySqlConnection(_connectionString);
+        await connection.OpenAsync();
+
+        var firstDayOfMonth = new DateTime(year, month, 1);
+        var firstDayNextMonth = firstDayOfMonth.AddMonths(1);
+
+        var sql = @"
+        SELECT DATE(date_depart) AS DateDepart, COUNT(*) AS Count
+        FROM covoiturage
+        WHERE date_depart >= @startDate AND date_depart < @endDate
+        GROUP BY DATE(date_depart)
+        ORDER BY DateDepart;
+    ";
+
+        using var command = new MySqlCommand(sql, connection);
+        command.Parameters.AddWithValue("@startDate", firstDayOfMonth.ToString("yyyy-MM-dd"));
+        command.Parameters.AddWithValue("@endDate", firstDayNextMonth.ToString("yyyy-MM-dd"));
+
+        using var reader = await command.ExecuteReaderAsync();
+
+        while (await reader.ReadAsync())
+        {
+            result.Add(new CovoiturageStatistiqueParJour
+            {
+                Date = reader.GetDateTime("DateDepart").ToString("yyyy-MM-dd"),
+                Count = reader.GetInt32("Count")
+            });
+        }
+
+        return result;
+    }
+
+
+    public async Task<List<CreditsStatistiqueParJour>> GetCreditsParJourAsync(int year, int month)
+    {
+        var result = new List<CreditsStatistiqueParJour>();
+
+        using var connection = new MySqlConnection(_connectionString);
+        await connection.OpenAsync();
+
+        var sql = @"
+        SELECT 
+            DATE(date_depart) AS Date,
+            COUNT(*) * 2 AS TotalCredit
+        FROM covoiturage
+        WHERE statut != 'annuler'
+          AND MONTH(date_depart) = @month
+          AND YEAR(date_depart) = @year
+        GROUP BY DATE(date_depart)
+        ORDER BY Date;
+    ";
+
+        using var command = new MySqlCommand(sql, connection);
+        command.Parameters.AddWithValue("@month", month);
+        command.Parameters.AddWithValue("@year", year);
+
+        using var reader = await command.ExecuteReaderAsync();
+
+        while (await reader.ReadAsync())
+        {
+            result.Add(new CreditsStatistiqueParJour
+            {
+                Date = reader.GetDateTime("Date").ToString("yyyy-MM-dd"),
+                TotalCredit = reader.GetInt32("TotalCredit")
+            });
+        }
+
+        return result;
+    }
+
+
+    public async Task<int> GetTotalCreditsMoisAsync(int year, int month)
+    {
+        using var connection = new MySqlConnection(_connectionString);
+        await connection.OpenAsync();
+
+        var sql = @"
+        SELECT COUNT(*) * 2 AS TotalCredit
+        FROM covoiturage
+        WHERE statut = 'arriver'
+          AND MONTH(date_depart) = @month
+          AND YEAR(date_depart) = @year;
+    ";
+
+        using var command = new MySqlCommand(sql, connection);
+        command.Parameters.AddWithValue("@month", month);
+        command.Parameters.AddWithValue("@year", year);
+
+        var result = await command.ExecuteScalarAsync();
+        return Convert.ToInt32(result);
+    }
+
+
+
 }

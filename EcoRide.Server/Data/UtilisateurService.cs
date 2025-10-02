@@ -37,7 +37,9 @@ public class UtilisateurService
                 Adresse = reader["adresse"].ToString(),
                 DateNaissance = reader["date_naissance"].ToString(),
                 //Photo = reader["photo"] as byte[], // ou: (byte[])reader["photo"]
-                Pseudo = reader["pseudo"].ToString()
+                Pseudo = reader["pseudo"].ToString(),
+                Acces = reader["acces"].ToString(),
+                Autorisation = reader["autorisation"].ToString()
             });
 
         }
@@ -74,7 +76,7 @@ public class UtilisateurService
         return null;
     }
 
-    public async Task<int> AddUtilisateurAsync(Utilisateur utilisateur)
+    public async Task<int> AddUtilisateurAsync(Utilisateur utilisateur, string statut)
     {
         using var connection = new MySqlConnection(_connectionString);
         await connection.OpenAsync();
@@ -118,7 +120,7 @@ public class UtilisateurService
         command.Parameters.AddWithValue("@date_naissance", utilisateur.DateNaissance);
         command.Parameters.AddWithValue("@photo", photoBytes ?? (object)DBNull.Value);
         command.Parameters.AddWithValue("@pseudo", utilisateur.Pseudo);
-        command.Parameters.AddWithValue("@acces", "utilisateur");
+        command.Parameters.AddWithValue("@acces", statut);
 
         // Exécuter l'insertion utilisateur
         var insertedId = Convert.ToInt32(await command.ExecuteScalarAsync());
@@ -190,7 +192,8 @@ public class UtilisateurService
                 DateNaissance = reader.GetString("date_naissance"),
                 Photo = reader["photo"] is DBNull ? null : Convert.ToBase64String((byte[])reader["photo"]),
                 Pseudo = reader.GetString("pseudo"),
-                Acces = reader.GetString("acces")
+                Acces = reader.GetString("acces"),
+                Autorisation = reader.GetString("autorisation")
             };
         }
 
@@ -386,5 +389,23 @@ public class UtilisateurService
         }
     }
 
+    public async Task UpdateAutorisationAsync(int utilisateurId, string nouvelleAutorisation)
+    {
+        using var connection = new MySqlConnection(_connectionString);
+        await connection.OpenAsync();
+
+        var command = new MySqlCommand(@"
+        UPDATE utilisateur
+        SET autorisation = @autorisation
+        WHERE utilisateur_id = @id;", connection);
+
+        command.Parameters.AddWithValue("@autorisation", nouvelleAutorisation);
+        command.Parameters.AddWithValue("@id", utilisateurId);
+
+        var rowsAffected = await command.ExecuteNonQueryAsync();
+
+        if (rowsAffected == 0)
+            throw new Exception("Utilisateur non trouvé ou mise à jour échouée.");
+    }
 
 }

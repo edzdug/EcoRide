@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using MySql.Data.MySqlClient;
 using System.Data;
 using System.Linq;
+using System.Text.Json;
 /*
 [ApiController]
 [Route("api/[controller]")]
@@ -271,6 +272,27 @@ namespace EcoRide.Server.Controllers
                 return StatusCode(500, new { message = "Erreur serveur", details = ex.Message });
             }
         }
+
+        [HttpGet("statistiques-par-jour")]
+        public async Task<ActionResult<IEnumerable<CovoiturageStatistiqueParJour>>> GetStatsParJour([FromQuery] int year, [FromQuery] int month)
+        {
+            var stats = await _service.GetCovoituragesParJourAsync(year, month);
+            return Ok(stats);
+        }
+
+        [HttpGet("statistiques-par-jour/credits")]
+        public async Task<ActionResult<List<CreditsStatistiqueParJour>>> GetCreditsParJour([FromQuery] int year, [FromQuery] int month)
+        {
+            var stats = await _service.GetCreditsParJourAsync(year, month);
+            return Ok(stats);
+        }
+
+        [HttpGet("total-mensuel")]
+        public async Task<ActionResult<int>> GetTotalCreditsDuMois([FromQuery] int year, [FromQuery] int month)
+        {
+            var total = await _service.GetTotalCreditsMoisAsync(year, month);
+            return Ok(total);
+        }
     }
 
     [ApiController]
@@ -302,7 +324,7 @@ namespace EcoRide.Server.Controllers
         }
 
         [HttpPost("PostUser")]
-        public async Task<ActionResult<Utilisateur>> PostAsync([FromBody] Utilisateur utilisateur)
+        public async Task<ActionResult<Utilisateur>> PostAsync([FromBody] Utilisateur utilisateur, [FromQuery] string statut)
         {
             if (await _service.EmailExisteAsync(utilisateur.Email))
                 return BadRequest("Cet email est déjà utilisé.");
@@ -310,7 +332,7 @@ namespace EcoRide.Server.Controllers
             if (await _service.PseudoExisteAsync(utilisateur.Pseudo))
                 return BadRequest("Ce pseudo est déjà utilisé.");
 
-            var insertedId = await _service.AddUtilisateurAsync(utilisateur);
+            var insertedId = await _service.AddUtilisateurAsync(utilisateur, statut);
 
             var utilisateurDto = new UtilisateurDto
             {
@@ -328,6 +350,19 @@ namespace EcoRide.Server.Controllers
             // CreatedAtAction nécessite que tu aies une méthode "GetById" accessible
             return CreatedAtAction(nameof(GetById), new { id = insertedId }, utilisateurDto);
 
+        }
+
+        [HttpPut("modifierAutorisation/{id}")]
+        public async Task<IActionResult> ModifierAutorisation(int id, [FromBody] JsonElement payload)
+        {
+            if (!payload.TryGetProperty("autorisation", out var autorisationElement))
+                return BadRequest("Champ 'autorisation' requis.");
+
+            var nouvelleAutorisation = autorisationElement.GetString();
+
+            await _service.UpdateAutorisationAsync(id, nouvelleAutorisation); // implémente cette méthode
+
+            return NoContent();
         }
 
 
@@ -352,6 +387,9 @@ namespace EcoRide.Server.Controllers
             var utilisateur = await _service.GetUtilisateurByEmailAsync(request.Email);
             if (utilisateur == null)
                 return Unauthorized("Email ou mot de passe incorrect");
+
+            if (utilisateur.Autorisation != "actif")
+                return Unauthorized("Le compte actuel est suspendu ou bloqué");
 
             bool isPasswordValid = BCrypt.Net.BCrypt.Verify(request.Password, utilisateur.Password);
             if (!isPasswordValid)

@@ -18,7 +18,6 @@ interface WeatherForecast {
 })
 export class AppComponent implements OnInit {
   public forecasts: WeatherForecast[] = [];
-
   constructor(private http: HttpClient, public authService: AuthService, private routes: ActivatedRoute, private router: Router) {}
 
   ngOnInit() {}

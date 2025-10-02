@@ -1,0 +1,45 @@
+<div class="mb-3">
+  <br />
+  <a [routerLink]="['/admin/ajouter-employe']">Ajouter un employé</a>
+  <br />
+  <br />
+  <a [routerLink]="['/admin/suspendre/user&employe']">Suspendre un utilisateur</a>
+</div>
+<br />
+<br />
+<div class="filters">
+  <label>
+    Année :
+    <input type="number" [(ngModel)]="selectedYear" min="2000" max="2100">
+  </label>
+
+  <label>
+    Mois :
+    <input type="number" [(ngModel)]="selectedMonth" min="1" max="12">
+  </label>
+
+  <button (click)="rechargerGraphiques()">Recharger</button>
+</div>
+
+<div class="charts-wrapper">
+  <h2>Statistiques des covoiturages (mois en cours)</h2>
+  <div style="display: block;" class="chart-container">
+    <canvas baseChart
+            #covoiturageChart
+            [data]="chartData"
+            [options]="chartOptions"
+            chartType="line">
+    </canvas>
+  </div>
+
+  <h2>Crédits gagnés par la plateforme</h2>
+  <p><strong>Total des crédits gagnés :</strong> {{ totalCredits }}</p>
+  <div style="display: block;" class="chart-container">
+    <canvas baseChart
+            #creditChart
+            [data]="creditChartData"
+            [options]="creditChartOptions"
+            chartType="line">
+    </canvas>
+  </div>
+</div>

@@ -11,11 +11,19 @@
       <!-- Si connecté -->
       <ng-container *ngIf="authService.isLoggedIn; else notLoggedIn">
 
-        <!-- Si l'utilisateur est employé -->
-        <ng-container *ngIf="authService.isEmploye; else utilisateurContent">
+        <!-- Si l'utilisateur est administrateur -->
+        <ng-container *ngIf="authService.isAdministrateur; else employeContent">
           <button class="connexion" (click)="logout()">Déconnexion</button>
-          <a class="link" routerLink="/employe">Espace employé</a>
+          <a class="link" routerLink="/admin">Espace administrateur</a>
         </ng-container>
+
+        <!-- Si l'utilisateur est employé -->
+        <ng-template #employeContent>
+          <ng-container *ngIf="authService.isEmploye; else utilisateurContent">
+            <button class="connexion" (click)="logout()">Déconnexion</button>
+            <a class="link" routerLink="/employe">Espace employé</a>
+          </ng-container>
+        </ng-template>
 
         <!-- Si l'utilisateur est un utilisateur classique -->
         <ng-template #utilisateurContent>
