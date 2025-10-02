@@ -55,4 +55,8 @@ export class AuthService {
   get isUtilisateur(): boolean {
     return this.access === 'utilisateur';
   }
+
+  get isAdministrateur(): boolean {
+    return this.access === 'administrateur';
+  }
 }

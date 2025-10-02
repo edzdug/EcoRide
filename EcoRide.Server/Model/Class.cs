@@ -69,6 +69,17 @@ namespace EcoRide.Server.Model
         public int VoitureId { get; set; }
     }
 
+    public class CovoiturageStatistiqueParJour
+    {
+        public string Date { get; set; }
+        public int Count { get; set; }
+    }
+
+    public class CreditsStatistiqueParJour
+    {
+        public string Date { get; set; } = string.Empty;
+        public int TotalCredit { get; set; }
+    }
 
     public class Utilisateur {
         public int? Id { get; set; }
@@ -92,6 +103,7 @@ namespace EcoRide.Server.Model
         public string Pseudo { get; set; }
 
         public string? Acces { get; set; }
+        public string? Autorisation { get; set; }
     }
 
     public class UtilisateurDto

@@ -21,7 +21,13 @@ export class AuthentificationComponent {
         this.router.navigate(['/accueil']); // Ou une page protégée
       },
       error: (err) => {
-        this.errorMessage = 'Email ou mot de passe incorrect.';
+        // Lire le message d'erreur envoyé par l'API
+        if (err.error && typeof err.error === 'string') {
+          this.errorMessage = err.error;
+        } else {
+          this.errorMessage = 'Erreur de connexion. Veuillez réessayer.';
+        }
+
         console.error('Erreur de connexion:', err);
       }
     });

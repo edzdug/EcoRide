@@ -17,6 +17,10 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HistoriqueComponent } from './historique/historique.component';
 import { SaisieAvisComponent } from './saisie-avis/saisie-avis.component';
 import { EspaceEmployeComponent } from './espace-employe/espace-employe.component';
+import { EspaceAdminComponent } from './espace-admin/espace-admin.component';
+import { AjouterEmployeComponent } from './ajouter-employe/ajouter-employe.component';
+import { SuspendreUtilisateurComponent } from './suspendre-utilisateur/suspendre-utilisateur.component';
+import { NgChartsModule } from 'ng2-charts';
 
 @NgModule({
   declarations: [
@@ -32,10 +36,13 @@ import { EspaceEmployeComponent } from './espace-employe/espace-employe.componen
     HistoriqueComponent,
     SaisieAvisComponent,
     EspaceEmployeComponent,
+    EspaceAdminComponent,
+    AjouterEmployeComponent,
+    SuspendreUtilisateurComponent,
   ],
   imports: [
     BrowserModule, HttpClientModule, ReactiveFormsModule,
-    AppRoutingModule, FormsModule
+    AppRoutingModule, FormsModule, NgChartsModule
   ],
   providers: [
     {
