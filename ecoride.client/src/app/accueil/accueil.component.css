@@ -1,24 +1,44 @@
-:host {
-  max-width: 1280px;
-  padding: 2rem;
-  text-align: center;
-}
-
-.presentation {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 100px;
-  max-width: 800px;
+.accueil-container {
+  max-width: 1000px;
   margin: auto;
+  padding: 2rem;
+  font-family: 'Segoe UI', sans-serif;
+  line-height: 1.6;
+}
+
+.presentation h1 {
+  color: #2a7b58;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.presentation p {
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.images {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+  .images img {
+    max-width: 48%;
+    border-radius: 8px;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  }
+
+.footer {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #ccc;
   text-align: center;
-  justify-content: center;
+  font-size: 0.9rem;
+  color: #555;
 }
 
-.image {
-  min-width: 400px;
-  height: auto;
-}
-
-.text {
-  justify-items: center;
-}
+  .footer a {
+    color: #2a7b58;
+    text-decoration: none;
+  }

@@ -18,6 +18,7 @@ import { AdministrateurGuard } from './authentification/administrateur.guard';
 import { EspaceAdminComponent } from './espace-admin/espace-admin.component';
 import { AjouterEmployeComponent } from './/ajouter-employe/ajouter-employe.component';
 import { SuspendreUtilisateurComponent } from './suspendre-utilisateur/suspendre-utilisateur.component';
+import { MentionLegalComponent } from './mention-legal/mention-legal.component';
 
 const routes: Routes = [
   { path: 'home', component: AppComponent },
@@ -26,6 +27,7 @@ const routes: Routes = [
   { path: 'itinerairevue', component: ItinerairevueComponent },
   { path: 'inscription', component: InscriptionComponent },
   { path: 'login', component: AuthentificationComponent },
+  { path: 'mentions-legales', component: MentionLegalComponent },
   { path: 'profil', component: ProfilComponent, canActivate: [AuthGuard] },
   { path: 'employe', component: EspaceEmployeComponent, canActivate: [EmployeGuard] },
   { path: 'admin', component: EspaceAdminComponent, canActivate: [AdministrateurGuard] },
