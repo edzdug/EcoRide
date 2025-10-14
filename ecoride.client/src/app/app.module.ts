@@ -21,6 +21,7 @@ import { EspaceAdminComponent } from './espace-admin/espace-admin.component';
 import { AjouterEmployeComponent } from './ajouter-employe/ajouter-employe.component';
 import { SuspendreUtilisateurComponent } from './suspendre-utilisateur/suspendre-utilisateur.component';
 import { NgChartsModule } from 'ng2-charts';
+import { MentionLegalComponent } from './mention-legal/mention-legal.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { NgChartsModule } from 'ng2-charts';
     EspaceAdminComponent,
     AjouterEmployeComponent,
     SuspendreUtilisateurComponent,
+    MentionLegalComponent,
   ],
   imports: [
     BrowserModule, HttpClientModule, ReactiveFormsModule,

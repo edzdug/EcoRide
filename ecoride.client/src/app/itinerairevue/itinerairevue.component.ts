@@ -43,7 +43,6 @@ export class ItinerairevueComponent implements OnInit {
 
   ngOnInit() {
     this.form = this.formDataService.getForm();
-    
     this.getAll();    
   }
 
@@ -60,6 +59,7 @@ export class ItinerairevueComponent implements OnInit {
         this.covoiturages = data.sort((a, b) =>
           new Date(b.dateDepart).getTime() - new Date(a.dateDepart).getTime()
         );
+        this.covoiturages=this.covoiturages.filter(v=>v.nbPlace != 0)
         console.log("Données reçues : ", this.covoiturages);
         this.filterCovoiturages();
       },

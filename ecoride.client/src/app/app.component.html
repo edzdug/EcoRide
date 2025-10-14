@@ -4,41 +4,42 @@
       <a class="navbar-brand" href="#">
         <img class="nav-logo" src="logo-ecodrive.png" />
       </a>
-      <a class="link" routerLink="/accueil">Retour à la page d'accueil</a>
-      <a class="link" routerLink="/itineraireform">Accès aux covoiturage</a>
-      <a class="link" routerLink="">Contact</a>
 
-      <!-- Si connecté -->
-      <ng-container *ngIf="authService.isLoggedIn; else notLoggedIn">
+      <!-- Bouton du menu mobile -->
+      <button class="menu-toggle" (click)="toggleMenu()">☰</button>
 
-        <!-- Si l'utilisateur est administrateur -->
-        <ng-container *ngIf="authService.isAdministrateur; else employeContent">
-          <button class="connexion" (click)="logout()">Déconnexion</button>
-          <a class="link" routerLink="/admin">Espace administrateur</a>
+      <!-- Liens de navigation -->
+      <div class="nav-links" [class.open]="menuOpen">
+        <a class="link" routerLink="/accueil" (click)="closeMenu()">Retour à la page d'accueil</a>
+        <a class="link" routerLink="/itineraireform" (click)="closeMenu()">Accès aux covoiturage</a>
+        <a class="link" routerLink="" (click)="closeMenu()">Contact </a>
+
+        <!-- Si connecté -->
+        <ng-container *ngIf="authService.isLoggedIn; else notLoggedIn">
+          <ng-container *ngIf="authService.isAdministrateur; else employeContent">
+            <button class="connexion" (click)="logout()">Déconnexion</button>
+            <a class="link" routerLink="/admin" (click)="closeMenu()">Espace administrateur</a>
+          </ng-container>
+
+          <ng-template #employeContent>
+            <ng-container *ngIf="authService.isEmploye; else utilisateurContent">
+              <button class="connexion" (click)="logout()">Déconnexion</button>
+              <a class="link" routerLink="/employe" (click)="closeMenu()">Espace employé</a>
+            </ng-container>
+          </ng-template>
+
+          <ng-template #utilisateurContent>
+            <button class="connexion" (click)="logout()">Déconnexion</button>
+            <a class="link" routerLink="/profil" (click)="closeMenu()">Espace utilisateur</a>
+          </ng-template>
         </ng-container>
 
-        <!-- Si l'utilisateur est employé -->
-        <ng-template #employeContent>
-          <ng-container *ngIf="authService.isEmploye; else utilisateurContent">
-            <button class="connexion" (click)="logout()">Déconnexion</button>
-            <a class="link" routerLink="/employe">Espace employé</a>
-          </ng-container>
+        <!-- Si pas connecté -->
+        <ng-template #notLoggedIn>
+          <button class="connexion" routerLink="/login" (click)="closeMenu()">Connexion</button>
+          <button class="connexion" routerLink="/inscription" (click)="closeMenu()">Enregistrement</button>
         </ng-template>
-
-        <!-- Si l'utilisateur est un utilisateur classique -->
-        <ng-template #utilisateurContent>
-          <button class="connexion" (click)="logout()">Déconnexion</button>
-          <a class="link" routerLink="/profil">Espace utilisateur</a>
-        </ng-template>
-
-      </ng-container>
-
-      <!-- Si pas connecté -->
-      <ng-template #notLoggedIn>
-        <button class="connexion" routerLink="/login">Connexion</button>
-        <button class="connexion" routerLink="/inscription">Enregistrement</button>
-      </ng-template>
-
+      </div>
     </nav>
   </header>
 

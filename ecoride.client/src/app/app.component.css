@@ -1,7 +1,7 @@
 :host {
-    max-width: 1280px;
-    padding: 2rem;
-    text-align: center;
+  max-width: 1280px;
+  padding: 2rem;
+  text-align: center;
 }
 
 /* Style général du header */
@@ -11,11 +11,12 @@
   padding: 10px 20px;
 }
 
-  /* Mettre le nav en flex, avec espace entre logo et liens */
+  /* Mise en forme du conteneur principal */
   #app-header nav.navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative; /* utile pour positionner le menu mobile */
   }
 
 /* Logo à gauche */
@@ -30,19 +31,15 @@
   width: 60px;
 }
 
-/* Conteneur des liens et boutons, alignés sur une même ligne */
+/* Liens et boutons sur une même ligne (version desktop) */
 #app-header nav.navbar > a.link,
 #app-header nav.navbar > button.connexion {
   margin-left: 20px;
-}
-
-/* On met nav en flex aussi pour que liens et boutons soient alignés */
-#app-header nav.navbar > a.link,
-#app-header nav.navbar > button.connexion {
   display: inline-flex;
   align-items: center;
 }
 
+/* Style des liens */
 a.link {
   text-decoration: none;
   color: black;
@@ -53,3 +50,58 @@ button.connexion {
   cursor: pointer;
 }
 
+/* ----------------------------- */
+/* RESPONSIVE MENU (mobile <900px) */
+/* ----------------------------- */
+
+/* Bouton menu (hamburger) */
+.menu-toggle {
+  display: none;
+  font-size: 28px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+/* Le conteneur qui regroupe tous les liens du menu */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Quand on passe sous 900px */
+@media (max-width: 700px) {
+  /* Le bouton menu apparaît à droite */
+  .menu-toggle {
+    display: block;
+    position: absolute;
+    right: 0px;
+  }
+
+  /* Les liens du menu se cachent par défaut */
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 70px;
+    right: 20px;
+    background-color: lightgreen;
+    border: 1px solid #999;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+  }
+
+    /* Quand le menu est ouvert (classe ajoutée dynamiquement par Angular) */
+    .nav-links.open {
+      display: flex;
+    }
+
+  /* On cache les liens “desktop” de base */
+  #app-header nav.navbar > a.link,
+  #app-header nav.navbar > button.connexion {
+    display: none;
+  }
+}

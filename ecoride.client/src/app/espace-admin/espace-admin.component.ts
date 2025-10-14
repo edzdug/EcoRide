@@ -99,10 +99,22 @@ export class EspaceAdminComponent {
           const dataMap = new Map<string, number>();
           data.forEach(d => dataMap.set(d.date, d.count));
 
-          // Remplir le tableau de valeurs en mettant 0 si pas de données
-          this.chartData.labels = allDays;
-          this.chartData.datasets[0].data = allDays.map(day => dataMap.get(day) ?? 0);
-          
+
+          // ✅ Remplacer entièrement chartData pour forcer le redraw
+          this.chartData = {
+            labels: allDays,
+            datasets: [
+              {
+                label: 'Nombre de covoiturages',
+                data: allDays.map(day => dataMap.get(day) ?? 0),
+                fill: true,
+                tension: 0.4,
+                borderColor: '#007bff',
+                backgroundColor: 'rgba(0, 123, 255, 0.3)',
+              }
+            ]
+          };
+
           console.log('Labels:', this.chartData.labels);
           console.log('Data:', this.chartData.datasets[0].data);
         },
@@ -134,8 +146,20 @@ export class EspaceAdminComponent {
           const dataMap = new Map<string, number>();
           data.forEach(d => dataMap.set(d.date, d.totalCredit));
 
-          this.creditChartData.labels = allDays;
-          this.creditChartData.datasets[0].data = allDays.map(day => dataMap.get(day) ?? 0);
+          // ✅ Remplacer entièrement chartData pour forcer le redraw
+          this.creditChartData = {
+            labels: allDays,
+            datasets: [
+              {
+                label: 'Nombre de crédits prévisionnels',
+                data: allDays.map(day => dataMap.get(day) ?? 0),
+                fill: true,
+                tension: 0.4,
+                borderColor: '#28a745',
+                backgroundColor: 'rgba(40, 167, 69, 0.3)',
+              }
+            ]
+          };
           
         },
         error: (err) => {

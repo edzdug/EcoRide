@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService }from './authentification/auth.service';
 
@@ -22,11 +22,31 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {}
 
-  
+  menuOpen = false;
+
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: Event) {
+    const target = event.target as HTMLElement;
+    const isMenu = target.closest('.nav-links');
+    const isButton = target.closest('.menu-toggle');
+
+    if (!isMenu && !isButton) {
+      this.menuOpen = false;
+    }
+  }
+
+  closeMenu() {
+    this.menuOpen = false;
+  }
+
+  toggleMenu() {
+    this.menuOpen = !this.menuOpen;
+  }
 
   logout() {
     this.authService.logout();
     this.router.navigate(['/login']);
+    this.closeMenu();
   }
 
   title = 'ecoride.client';
