@@ -22,15 +22,15 @@ type Form = {
 })
 export class AjouterEmployeComponent {
   form: Form = {
-    nom: "emma",
-    prenom: "smith",
-    email: "emma@sfr.fr",
-    password: "Mot De Passe",
-    telephone: "06299458234",
-    adresse: "91 route nationale, Reims",
-    dateNaissance: "12 octobre 1990",
+    nom: "",
+    prenom: "",
+    email: "",
+    password: "",
+    telephone: "",
+    adresse: "",
+    dateNaissance: "",
     photo: undefined,
-    pseudo: "emi"
+    pseudo: ""
   };
 
   constructor(
@@ -57,6 +57,19 @@ export class AjouterEmployeComponent {
     if (file) {
       this.form.photo = file;
     }
+  }
+
+  isFormValid(): boolean {
+    return (
+      this.form.nom.trim() !== "" &&
+      this.form.prenom.trim() !== "" &&
+      this.form.email.trim() !== "" &&
+      this.form.password.trim() !== "" &&
+      this.form.telephone.trim() !== "" &&
+      this.form.adresse.trim() !== "" &&
+      this.form.dateNaissance.trim() !== "" &&
+      this.form.pseudo.trim() !== ""
+    );
   }
 
 

@@ -12,13 +12,13 @@
     <form (ngSubmit)="envoie()">
 
         <div class="mb-3">
-            <label for="nom" class="form-label">Départ</label>
-            <input type="text" id="nom" [(ngModel)]="form.depart" name="depart" class="form-control" required />
+            <label for="depart" class="form-label">Départ</label>
+            <input type="text" id="depart" [(ngModel)]="form.depart" name="depart" class="form-control" placeholder="Paris" required />
         </div>
 
         <div class="mb-3">
-            <label for="prenom" class="form-label">Destination</label>
-            <input type="text" id="prenom" [(ngModel)]="form.destination" name="destination" class="form-control" required />
+            <label for="destination" class="form-label">Destination</label>
+            <input type="text" id="destination" [(ngModel)]="form.destination" name="destination" class="form-control" placeholder="Reims" required />
         </div>
 
         <div class="mb-3">
