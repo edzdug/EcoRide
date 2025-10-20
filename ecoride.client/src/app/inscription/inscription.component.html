@@ -20,37 +20,37 @@
 
         <div class="mb-3">
           <label for="nom" class="form-label">Nom : </label>
-          <input type="text" id="nom" [(ngModel)]="form.nom" name="depart" class="form-control" required />
+          <input type="text" id="nom" [(ngModel)]="form.nom" name="depart" class="form-control" placeholder="smith" required />
         </div>
 
         <div class="mb-3">
           <label for="prenom" class="form-label">Prénom : </label>
-          <input type="text" id="prenom" [(ngModel)]="form.prenom" name="destination" class="form-control" required />
+          <input type="text" id="prenom" [(ngModel)]="form.prenom" name="destination" class="form-control" placeholder="emma" required />
         </div>
 
         <div class="mb-3">
           <label for="email" class="form-label">Email : </label>
-          <input type="text" id="email" [(ngModel)]="form.email" name="email" class="form-control" required />
+          <input type="text" id="email" [(ngModel)]="form.email" name="email" class="form-control" placeholder="emma@sfr.fr" required />
         </div>
 
         <div class="mb-3">
           <label for="password" class="form-label">Mot de passe : </label>
-          <input type="text" id="password" [(ngModel)]="form.password" name="password" class="form-control" required />
+          <input type="text" id="password" [(ngModel)]="form.password" name="password" class="form-control" placeholder="Mot De passe" required />
         </div>
 
         <div class="mb-3">
           <label for="telephone" class="form-label">Numéro de téléphone : </label>
-          <input type="text" id="telephone" [(ngModel)]="form.telephone" name="telephone" class="form-control" required />
+          <input type="text" id="telephone" [(ngModel)]="form.telephone" name="telephone" class="form-control" placeholder="0687394634" required />
         </div>
 
         <div class="mb-3">
           <label for="adresse" class="form-label">Adresse : </label>
-          <input type="text" id="adresse" [(ngModel)]="form.adresse" name="adresse" class="form-control" required />
+          <input type="text" id="adresse" [(ngModel)]="form.adresse" name="adresse" class="form-control" placeholder="19 rue du moulin, Reims" required />
         </div>
 
         <div class="mb-3">
           <label for="dateNaissance" class="form-label">Date de naissance : </label>
-          <input type="text" id="dateNaissance" [(ngModel)]="form.dateNaissance" name="dateNaissance" class="form-control" required />
+          <input type="text" id="dateNaissance" [(ngModel)]="form.dateNaissance" name="dateNaissance" class="form-control"  placeholder="12 octobre 1990"required />
         </div>
 
         <div class="mb-3">
@@ -60,13 +60,13 @@
 
         <div class="mb-3">
           <label for="pseudo" class="form-label">Pseudonyme : </label>
-          <input type="text" id="pseudo" [(ngModel)]="form.pseudo" name="pseudo" class="form-control" required />
+          <input type="text" id="pseudo" [(ngModel)]="form.pseudo" name="pseudo" class="form-control" placeholder="emi" required />
         </div>
 
         <br />
         <br />
 
-        <button type="submit" class="btn btn-primary">Envoie</button>
+        <button type="submit" class="btn btn-primary" [disabled]="!isFormValid()">Envoie</button>
       </form>
     </div>
   </div>

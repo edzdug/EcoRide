@@ -29,8 +29,8 @@ export class FormDataService {
 export class ItineraireformComponent {
 
   form: Form = {
-    depart: 'Paris',
-    destination: 'Reims',
+    depart: '',
+    destination: '',
     date: new Date()
   };
 
