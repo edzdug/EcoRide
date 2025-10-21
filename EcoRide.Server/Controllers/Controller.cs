@@ -332,6 +332,7 @@ namespace EcoRide.Server.Controllers
             if (await _service.PseudoExisteAsync(utilisateur.Pseudo))
                 return BadRequest("Ce pseudo est déjà utilisé.");
 
+            try { 
             var insertedId = await _service.AddUtilisateurAsync(utilisateur, statut);
 
             var utilisateurDto = new UtilisateurDto
@@ -349,7 +350,12 @@ namespace EcoRide.Server.Controllers
 
             // CreatedAtAction nécessite que tu aies une méthode "GetById" accessible
             return CreatedAtAction(nameof(GetById), new { id = insertedId }, utilisateurDto);
-
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[ERROR] PostUser failed: {ex.Message}");
+                return StatusCode(500, ex.Message);
+            }
         }
 
         [HttpPut("modifierAutorisation/{id}")]

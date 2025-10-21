@@ -19,6 +19,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.Configure<SmtpSettings>(
     builder.Configuration.GetSection("SmtpSettings"));
 
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+Console.WriteLine($"[DEBUG] Chaîne de connexion utilisée : {connectionString}");
+
 builder.Services.AddTransient<AvisService>();
 builder.Services.AddTransient<EmailService>();
 builder.Services.AddScoped<CovoiturageService>();

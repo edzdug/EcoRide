@@ -56,15 +56,31 @@ export class InscriptionComponent {
     if (this.form.photo) {
       const base64Photo = await blobToBase64(this.form.photo);
       const utilisateurToSend = { ...this.form, photo: base64Photo };
-      this.http.post('/api/utilisateur/PostUser?statut=utilisateur', utilisateurToSend).subscribe(response => {
-        console.log("Utilisateur créé :", response);
-        this.router.navigate(['/login']);
-      });
+      this.http.post('/api/utilisateur/PostUser?statut=utilisateur', utilisateurToSend)
+        .subscribe({
+          next: (response) => {
+            console.log("Utilisateur créé :", response);
+            this.router.navigate(['/login']);
+          },
+          error: (err) => {
+            console.error("Erreur lors de l'inscription :", err);
+            alert("Erreur d'inscription : " + (err?.error || err?.message));
+          }
+        });
+
     } else {
-      this.http.post('/api/utilisateur/PostUser?statut=utilisateur', this.form).subscribe(response => {
-        console.log("Utilisateur créé :", response);
-        this.router.navigate(['/login']);
-      });
+      this.http.post('/api/utilisateur/PostUser?statut=utilisateur', this.form)
+  .subscribe({
+    next: (response) => {
+      console.log("Utilisateur créé :", response);
+      this.router.navigate(['/login']);
+    },
+    error: (err) => {
+      console.error("Erreur lors de l'inscription :", err);
+      alert("Erreur d'inscription : " + (err?.error || err?.message));
+    }
+  });
+
     }
   }
 
