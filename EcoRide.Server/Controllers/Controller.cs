@@ -354,6 +354,7 @@ namespace EcoRide.Server.Controllers
             catch (Exception ex)
             {
                 Console.WriteLine($"[ERROR] PostUser failed: {ex.Message}");
+                Console.WriteLine(ex.StackTrace);
                 return StatusCode(500, ex.Message);
             }
         }
