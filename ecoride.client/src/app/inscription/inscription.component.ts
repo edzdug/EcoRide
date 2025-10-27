@@ -103,18 +103,6 @@ export class InscriptionComponent {
     }
   }
 
-  isFormValid(): boolean {
-    return (
-      this.form.nom.trim() !== "" &&
-      this.form.prenom.trim() !== "" &&
-      this.form.email.trim() !== "" &&
-      this.form.password.trim() !== "" &&
-      this.form.telephone.trim() !== "" &&
-      this.form.adresse.trim() !== "" &&
-      this.form.dateNaissance.trim() !== "" &&
-      this.form.pseudo.trim() !== ""
-    );
-  }
 
   getSuggestions(query: string) {
     if (!query || query.length < 3) return []; // n'appelle pas trop tôt
