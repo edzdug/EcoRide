@@ -16,31 +16,71 @@
       <br />
       <br />
 
-      <form (ngSubmit)="envoie()">
+      <form #formRef="ngForm" (ngSubmit)="envoie()" novalidate>
 
         <div class="mb-3">
           <label for="nom" class="form-label">Nom : </label>
-          <input type="text" id="nom" [(ngModel)]="form.nom" name="depart" class="form-control" placeholder="smith" required />
+          <input type="text" id="nom" [(ngModel)]="form.nom" name="depart" class="form-control" placeholder="nom" required />
         </div>
 
         <div class="mb-3">
           <label for="prenom" class="form-label">Prénom : </label>
-          <input type="text" id="prenom" [(ngModel)]="form.prenom" name="destination" class="form-control" placeholder="emma" required />
+          <input type="text" id="prenom" [(ngModel)]="form.prenom" name="destination" class="form-control" placeholder="prenom" required />
         </div>
 
         <div class="mb-3">
-          <label for="email" class="form-label">Email : </label>
-          <input type="text" id="email" [(ngModel)]="form.email" name="email" class="form-control" placeholder="emma@sfr.fr" required />
+          <label for="email" class="form-label">Email :</label>
+          <input type="email"
+                 id="email"
+                 [(ngModel)]="form.email"
+                 name="email"
+                 class="form-control"
+                 required
+                 email
+                 #emailCtrl="ngModel" />
+
+          <div *ngIf="emailCtrl.invalid && (emailCtrl.dirty || emailCtrl.touched)" class="text-danger">
+            <div *ngIf="emailCtrl.errors?.['required']">L'email est requis.</div>
+            <div *ngIf="emailCtrl.errors?.['email']">Format d'email invalide.</div><br />
+          </div>
         </div>
 
         <div class="mb-3">
-          <label for="password" class="form-label">Mot de passe : </label>
-          <input type="text" id="password" [(ngModel)]="form.password" name="password" class="form-control" placeholder="Mot De passe" required />
+          <label for="password" class="form-label">Mot de passe :</label>
+          <input type="password"
+                 id="password"
+                 [(ngModel)]="form.password"
+                 name="password"
+                 class="form-control"
+                 required
+                 minlength="8"
+                 pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).{8,}$"
+                 #passwordCtrl="ngModel" />
+
+          <div *ngIf="passwordCtrl.invalid && (passwordCtrl.dirty || passwordCtrl.touched)" class="text-danger">
+            <div *ngIf="passwordCtrl.errors?.['required']">Le mot de passe est requis.</div>
+            <div *ngIf="passwordCtrl.errors?.['minlength']">Au moins 8 caractères.</div>
+            <div *ngIf="passwordCtrl.errors?.['pattern']">
+              Doit contenir une majuscule, une minuscule et un chiffre.
+            </div><br />
+          </div>
         </div>
 
         <div class="mb-3">
-          <label for="telephone" class="form-label">Numéro de téléphone : </label>
-          <input type="text" id="telephone" [(ngModel)]="form.telephone" name="telephone" class="form-control" placeholder="0687394634" required />
+          <label for="telephone" class="form-label">Numéro de téléphone :</label>
+          <input type="tel"
+                 id="telephone"
+                 [(ngModel)]="form.telephone"
+                 name="telephone"
+                 class="form-control"
+                 required
+                 pattern="^(?:\+33|0)[1-9](?:\d{2}){4}$"
+                 #telCtrl="ngModel" />
+
+          <div *ngIf="telCtrl.invalid && (telCtrl.dirty || telCtrl.touched)" class="text-danger">
+            <div *ngIf="telCtrl.errors?.['required']">Le numéro de téléphone est requis.</div>
+            <div *ngIf="telCtrl.errors?.['pattern']">Numéro invalide (ex: 0612345678 ou +33612345678).</div><br />
+          </div>
         </div>
 
         <div class="mb-3 position-relative">
@@ -69,7 +109,7 @@
 
         <div class="mb-3">
           <label for="dateNaissance" class="form-label">Date de naissance : </label>
-          <input type="text" id="dateNaissance" [(ngModel)]="form.dateNaissance" name="dateNaissance" class="form-control"  placeholder="12 octobre 1990"required />
+          <input type="date" id="dateNaissance" [(ngModel)]="form.dateNaissance" name="dateNaissance" class="form-control" placeholder="date" required />
         </div>
 
         <div class="mb-3">
@@ -79,13 +119,13 @@
 
         <div class="mb-3">
           <label for="pseudo" class="form-label">Pseudonyme : </label>
-          <input type="text" id="pseudo" [(ngModel)]="form.pseudo" name="pseudo" class="form-control" placeholder="emi" required />
+          <input type="text" id="pseudo" [(ngModel)]="form.pseudo" name="pseudo" class="form-control" placeholder="pseudo" required />
         </div>
 
         <br />
         <br />
 
-        <button type="submit" class="btn btn-primary" [disabled]="!isFormValid()">Envoie</button>
+        <button type="submit" class="btn btn-primary" [disabled]="!formRef.form.valid">Envoie</button>
       </form>
     </div>
   </div>
