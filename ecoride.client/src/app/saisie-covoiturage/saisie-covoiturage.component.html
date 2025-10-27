@@ -14,8 +14,27 @@
   </div>
   <br />
 
-  <label>Lieu départ:</label>
-  <input type="text" formControlName="lieuDepart" />
+  <div class="mb-3 position-relative">
+    <label for="lieuDepart" class="form-label">Lieu départ :</label>
+    <input id="lieuDepart"
+           type="text"
+           class="form-control"
+           formControlName="lieuDepart"
+           [formControl]="lieuDepartCtrl"
+           autocomplete="off"
+           placeholder="Ex: Paris" />
+
+    <ul *ngIf="suggestionsDepart.length > 0"
+        class="list-group position-absolute w-100"
+        style="z-index: 1000;">
+      <li *ngFor="let suggestion of suggestionsDepart"
+          (click)="choisirDepart(suggestion)"
+          class="list-group-item list-group-item-action"
+          style="cursor: pointer;">
+        {{ suggestion }}
+      </li>
+    </ul>
+  </div>
   <div *ngIf="covoiturageForm.get('lieuDepart')?.invalid && covoiturageForm.get('lieuDepart')?.touched">
     Lieu départ requis.
   </div>
@@ -35,8 +54,27 @@
   </div>
   <br />
 
-  <label>Lieu arrivée:</label>
-  <input type="text" formControlName="lieuArrivee" />
+  <div class="mb-3 position-relative">
+    <label for="lieuArrivee" class="form-label">Lieu arrivée :</label>
+    <input id="lieuArrivee"
+           type="text"
+           class="form-control"
+           formControlName="lieuArrivee"
+           [formControl]="lieuArriveeCtrl"
+           autocomplete="off"
+           placeholder="Ex: Reims" />
+
+    <ul *ngIf="suggestionsArrivee.length > 0"
+        class="list-group position-absolute w-100"
+        style="z-index: 1000;">
+      <li *ngFor="let suggestion of suggestionsArrivee"
+          (click)="choisirArrivee(suggestion)"
+          class="list-group-item list-group-item-action"
+          style="cursor: pointer;">
+        {{ suggestion }}
+      </li>
+    </ul>
+  </div>
   <div *ngIf="covoiturageForm.get('lieuArrivee')?.invalid && covoiturageForm.get('lieuArrivee')?.touched">
     Lieu arrivée requis.
   </div>
