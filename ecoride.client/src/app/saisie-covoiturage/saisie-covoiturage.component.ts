@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../authentification/auth.service'; // adapte le chemin si besoin
 import { Router } from '@angular/router';
+import { debounceTime, distinctUntilChanged, switchMap, map } from 'rxjs';
 
 
 @Component({
@@ -22,6 +23,14 @@ export class SaisieCovoiturageComponent implements OnInit {
   message = '';
   nouvelleVoiture: any = {};
 
+  // 🔹 Ajout de deux contrôles distincts pour les adresses
+  lieuDepartCtrl = new FormControl<string>('');
+  lieuArriveeCtrl = new FormControl<string>('');
+
+  // 🔹 Tableaux de suggestions indépendants
+  suggestionsDepart: string[] = [];
+  suggestionsArrivee: string[] = [];
+
   constructor(
     private fb: FormBuilder,
     private http: HttpClient,
@@ -35,6 +44,7 @@ export class SaisieCovoiturageComponent implements OnInit {
       this.utilisateurId = utilisateur.id;
       this.initForm();
       this.chargerVoitures();
+      this.initAutocomplete();
     } else {
       this.message = "Utilisateur non connecté.";
     }
@@ -137,4 +147,46 @@ export class SaisieCovoiturageComponent implements OnInit {
     });
 
   }
+
+  // 🔹 Initialisation des suggestions automatiques
+  initAutocomplete() {
+    // Auto-complétion départ
+    this.lieuDepartCtrl.valueChanges.pipe(
+      debounceTime(400),
+      distinctUntilChanged(),
+      switchMap(value => this.getSuggestions(value ?? ''))
+    ).subscribe(results => this.suggestionsDepart = results);
+
+    // Auto-complétion arrivée
+    this.lieuArriveeCtrl.valueChanges.pipe(
+      debounceTime(400),
+      distinctUntilChanged(),
+      switchMap(value => this.getSuggestions(value ?? ''))
+    ).subscribe(results => this.suggestionsArrivee = results);
+  }
+
+  // 🔹 Appel API adresse
+  getSuggestions(query: string) {
+    if (!query || query.length < 3) return [];
+    const url = `https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(query)}&limit=5`;
+    return this.http.get<any>(url).pipe(
+      map(res => res.features.map((f: any) => f.properties.label))
+    );
+  }
+
+  // 🔹 Sélection d'une suggestion départ
+  choisirDepart(adresse: string) {
+    this.covoiturageForm.patchValue({ lieuDepart: adresse });
+    this.lieuDepartCtrl.setValue(adresse, { emitEvent: false });
+    this.suggestionsDepart = [];
+  }
+
+  // 🔹 Sélection d'une suggestion arrivée
+  choisirArrivee(adresse: string) {
+    this.covoiturageForm.patchValue({ lieuArrivee: adresse });
+    this.lieuArriveeCtrl.setValue(adresse, { emitEvent: false });
+    this.suggestionsArrivee = [];
+  }
+
+
 }

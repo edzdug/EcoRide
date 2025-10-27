@@ -1,36 +1,68 @@
-
 <div class="card-header pb-0">
-    <h2>Formulaire d'itinéraire</h2>
+  <h2>Formulaire d'itinéraire</h2>
 </div>
 
 <div class="card-body">
+  <form (ngSubmit)="envoie()">
 
-  <div class="mb-3">
-    <!-- <a [routerLink]="['/accueil']">Retour à la page précédente</a>-->
-  </div>
+    <!-- Champ départ -->
+    <div class="mb-3 position-relative">
+      <label for="depart" class="form-label">Départ</label>
+      <input type="text"
+             id="depart"
+             class="form-control"
+             placeholder="Paris"
+             [(ngModel)]="form.depart"
+             name="depart"
+             [formControl]="departCtrl"
+             autocomplete="off"
+             required />
 
-    <form (ngSubmit)="envoie()">
+      <!-- Suggestions départ -->
+      <ul *ngIf="suggestionsDepart.length > 0"
+          class="list-group position-absolute w-100"
+          style="z-index: 1000;">
+        <li *ngFor="let suggestion of suggestionsDepart"
+            (click)="choisirDepart(suggestion)"
+            class="list-group-item list-group-item-action"
+            style="cursor: pointer;">
+          {{ suggestion }}
+        </li>
+      </ul>
+    </div>
 
-        <div class="mb-3">
-            <label for="depart" class="form-label">Départ</label>
-            <input type="text" id="depart" [(ngModel)]="form.depart" name="depart" class="form-control" placeholder="Paris" required />
-        </div>
+    <!-- Champ destination -->
+    <div class="mb-3 position-relative">
+      <label for="destination" class="form-label">Arrivée</label>
+      <input type="text"
+             id="destination"
+             class="form-control"
+             placeholder="Reims"
+             [(ngModel)]="form.destination"
+             name="destination"
+             [formControl]="destinationCtrl"
+             autocomplete="off"
+             required />
 
-        <div class="mb-3">
-            <label for="destination" class="form-label">Arrivée</label>
-            <input type="text" id="destination" [(ngModel)]="form.destination" name="destination" class="form-control" placeholder="Reims" required />
-        </div>
+      <!-- Suggestions destination -->
+      <ul *ngIf="suggestionsDestination.length > 0"
+          class="list-group position-absolute w-100"
+          style="z-index: 1000;">
+        <li *ngFor="let suggestion of suggestionsDestination"
+            (click)="choisirDestination(suggestion)"
+            class="list-group-item list-group-item-action"
+            style="cursor: pointer;">
+          {{ suggestion }}
+        </li>
+      </ul>
+    </div>
 
-        <div class="mb-3">
-            <label for="date" class="form-label">Date</label>
-            <input type="date" id="date" [(ngModel)]="form.date" name="date" class="form-control" required />
-        </div>
+    <div class="mb-3">
+      <label for="date" class="form-label">Date</label>
+      <input type="date" id="date" [(ngModel)]="form.date" name="date" class="form-control" required />
+    </div>
 
-
-        <br />
-        <br />
-
-        <button type="submit" class="btn btn-primary">Envoyer</button>
-    </form>
+    <br />
+    <button type="submit" class="btn btn-primary">Envoyer</button>
+  </form>
 </div>
-
