@@ -43,9 +43,28 @@
       <input type="text" id="telephone" [(ngModel)]="form.telephone" name="telephone" class="form-control" required />
     </div>
 
-    <div class="mb-3">
-      <label for="adresse" class="form-label">Adresse : </label>
-      <input type="text" id="adresse" [(ngModel)]="form.adresse" name="adresse" class="form-control" required />
+    <div class="mb-3 position-relative">
+      <label for="adresse" class="form-label">Adresse :</label>
+      <input type="text" id="adresse"
+             [formControl]="adresseCtrl"
+             [(ngModel)]="form.adresse"
+             name="adresse"
+             class="form-control"
+             placeholder="19 rue du moulin, Reims"
+             autocomplete="off"
+             required />
+
+      <!-- Liste de suggestions -->
+      <ul *ngIf="suggestions.length > 0"
+          class="list-group position-absolute w-100"
+          style="z-index: 1000;">
+        <li *ngFor="let suggestion of suggestions"
+            (click)="choisirAdresse(suggestion)"
+            class="list-group-item list-group-item-action"
+            style="cursor: pointer;">
+          {{ suggestion }}
+        </li>
+      </ul>
     </div>
 
     <div class="mb-3">
