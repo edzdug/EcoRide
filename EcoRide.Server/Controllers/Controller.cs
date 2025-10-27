@@ -348,7 +348,6 @@ namespace EcoRide.Server.Controllers
                 Pseudo = utilisateur.Pseudo
             };
 
-            // CreatedAtAction nécessite que tu aies une méthode "GetById" accessible
             return CreatedAtAction(nameof(GetById), new { id = insertedId }, utilisateurDto);
             }
             catch (Exception ex)

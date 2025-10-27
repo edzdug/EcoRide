@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, Injectable } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
+import { debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs';
 
 type Form = {
   nom: string;
@@ -45,12 +47,21 @@ export class InscriptionComponent {
     photo: undefined,
     pseudo: ""
   };
-
+  adresseCtrl = new FormControl<string>('');
+  suggestions: string[] = [];
   constructor(
     private http: HttpClient,
     private router: Router,
     private formDataService: FormDataService
   ) { }
+
+  ngOnInit() {
+    this.adresseCtrl.valueChanges.pipe(
+      debounceTime(400),             // ⏳ attend 400ms entre les frappes
+      distinctUntilChanged(),         // évite les appels inutiles
+      switchMap(value => this.getSuggestions(value ?? ''))
+    ).subscribe(results => this.suggestions = results);
+  }
 
   async envoie() {
     if (this.form.photo) {
@@ -105,6 +116,19 @@ export class InscriptionComponent {
     );
   }
 
+  getSuggestions(query: string) {
+    if (!query || query.length < 3) return []; // n'appelle pas trop tôt
+    const url = `https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(query)}&limit=5`;
+    return this.http.get<any>(url).pipe(
+      // on mappe les résultats pour n’extraire que les noms
+      map(res => res.features.map((f: any) => f.properties.label))
+    );
+  }
+
+  choisirAdresse(adresse: string) {
+    this.adresseCtrl.setValue(adresse);
+    this.suggestions = [];
+  }
 
 }
 function blobToBase64(blob: Blob): Promise<string> {
