@@ -42,7 +42,7 @@ export class ProfilComponent {
     couleur: '',
     date_premiere_immatriculation: '',
     marque_id: 1,
-    nb_place: 0,
+    nb_place: 1,
     utilisateur_id: undefined,
     preference: {
       fumeur: false,
