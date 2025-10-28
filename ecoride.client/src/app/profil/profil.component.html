@@ -41,7 +41,7 @@
     <br />
     <br />
     <label>
-      Date de 1ère immatriculation : <input name="premiere_immatriculation" placeholder="Date de 1ère immatriculation" [(ngModel)]="voiture.date_premiere_immatriculation" required>
+      Date de 1ère immatriculation : <input type="date" name="premiere_immatriculation" placeholder="Date de 1ère immatriculation" [(ngModel)]="voiture.date_premiere_immatriculation" required>
     </label>
     <br />
     <br />
@@ -54,7 +54,7 @@
     <br />
 
     <label>
-      <input type="checkbox" [(ngModel)]="nouvelleMarqueActive" name="nouvelle_marque_act"> Ajouter une nouvelle marque
+      Ajouter une nouvelle marque <input type="checkbox" [(ngModel)]="nouvelleMarqueActive" name="nouvelle_marque_act">
     </label>
     <br />
 
@@ -64,11 +64,15 @@
 
     <br />
     <label>
-      Nombre de places : <input name="nb_place" placeholder="Nombre de places" [(ngModel)]="voiture.nb_place" type="number" required>
+      Nombre de places : <input name="nb_place" placeholder="Nombre de places" [(ngModel)]="voiture.nb_place" type="number" min="1" required #nbPlaceCtrl="ngModel">
     </label>
+    <div *ngIf="nbPlaceCtrl.invalid && nbPlaceCtrl.touched" style="color:red">
+      <span *ngIf="nbPlaceCtrl.errors?.['required']">Le nombre de places est requis.</span>
+      <span *ngIf="nbPlaceCtrl.errors?.['min']">Le nombre minimum est 1.</span>
+    </div>
 
     <h4>Préférences</h4>
-    <label>Fumeur acceptés</label><input type="checkbox" [(ngModel)]="voiture.preference.fumeur" name="fumeur">
+    <label>Fumeurs acceptés</label><input type="checkbox" [(ngModel)]="voiture.preference.fumeur" name="fumeur">
     <br />
     <label>Animaux acceptés</label><input type="checkbox" [(ngModel)]="voiture.preference.animal" name="animal">
     <br />
