@@ -90,7 +90,7 @@ export class ProfilComponent {
     }
 
     this.http.post('/api/Profil/roleSet', possede).subscribe({
-      next: () => console.log('Rôles envoyés avec succès'),
+      next: () => { console.log('Rôles envoyés avec succès'); alert("Rôles sélectionné avec succès"); },
       error: (err) => console.error('Erreur lors de l\'envoi des rôles', err)
     });
 
@@ -99,7 +99,7 @@ export class ProfilComponent {
       this.voiture.utilisateur_id = this.user.id;
 
       this.http.post('/api/Profil/voiture', this.voiture).subscribe({
-        next: () => console.log("Voiture enregistrée"),
+        next: () => { console.log("Voiture enregistrée"); alert("Voiture enregistrée"); },
         error: (err) => console.error("Erreur voiture :", err)
       });
     };
