@@ -1,6 +1,7 @@
 ﻿using EcoRide.Server.Model;
-using MySql.Data.MySqlClient;
 using Microsoft.Extensions.Configuration;
+using MySql.Data.MySqlClient;
+using System.Data;
 
 public class RoleService
 {
@@ -56,4 +57,31 @@ public class RoleService
 
         return result;
     }
+
+    public async Task<List<string>> GetRolesUtilisateurAsync(int utilisateurId)
+    {
+        var roles = new List<string>();
+
+        using var connection = new MySqlConnection(_connectionString);
+        await connection.OpenAsync();
+
+        string query = @"
+        SELECT r.libelle
+        FROM role r
+        INNER JOIN possede p ON r.role_id = p.role_id
+        WHERE p.utilisateur_id = @uid;
+    ";
+
+        using var cmd = new MySqlCommand(query, connection);
+        cmd.Parameters.AddWithValue("@uid", utilisateurId);
+
+        using var reader = await cmd.ExecuteReaderAsync();
+        while (await reader.ReadAsync())
+        {
+            roles.Add(reader.GetString("libelle"));
+        }
+
+        return roles;
+    }
+
 }

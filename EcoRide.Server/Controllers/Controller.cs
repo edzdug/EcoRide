@@ -460,6 +460,13 @@ namespace EcoRide.Server.Controllers
             return Ok(roles);
         }
 
+        [HttpGet("roleUserGet/{id}")]
+        public async Task<ActionResult<List<Role>>> GetRoleUser(int id)
+        {
+            var roles = await _roleService.GetRolesUtilisateurAsync(id);
+            return Ok(roles);
+        }
+
         // POST: /api/profil/voiture
         [HttpPost("voiture")]
         public async Task<IActionResult> AjouterVoiture([FromBody] Voiture voiture)
