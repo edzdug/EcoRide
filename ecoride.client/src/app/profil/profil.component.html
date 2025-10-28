@@ -8,6 +8,13 @@
   <a [routerLink]="['/historique',user.id]">Voir votre historique</a>
 </div>
 
+<div class="mb-3">
+  <br />
+  <h3 *ngIf="rolesUser == null">Aucun rôle assigné actuellement</h3>
+  <h3 *ngIf="rolesUser.length == 1">Vous êtes actuellement '{{rolesUser}}'</h3>
+  <h3 *ngIf="rolesUser.length == 2">Vous êtes actuellement 'passager-chauffeur'</h3>
+</div>
+
 <form #profilForm="ngForm" class="centeredForm" (ngSubmit)="submit()" novalidate>
 
   <h3>Sélectionnez votre/vos rôle(s)</h3>

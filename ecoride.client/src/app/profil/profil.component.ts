@@ -31,6 +31,7 @@ export class ProfilComponent {
   nouvelleMarqueActive = false;
   nouvelleMarqueLibelle = '';
   public rolesDispo: Role[] = [];
+  public rolesUser: string[] = [];
 
   energies: string[] = ["électrique", "diesel", "gazole","hybride"];
 
@@ -69,6 +70,9 @@ export class ProfilComponent {
       this.rolesDispo = data;
     });
 
+    this.http.get<string[]>(`/api/Profil/roleUserGet/${this.user.id}`).subscribe(data => {
+      this.rolesUser = data;
+    });
   }
 
   submit() {
