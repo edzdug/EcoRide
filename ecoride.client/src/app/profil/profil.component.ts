@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../authentification/auth.service';
 import { HttpClient } from '@angular/common/http';
+import { delay, forkJoin } from 'rxjs';
 
 interface Marque {
   id: number;
@@ -32,8 +33,8 @@ export class ProfilComponent {
   nouvelleMarqueLibelle = '';
   public rolesDispo: Role[] = [];
   public rolesUser: string[] = [];
-
-  energies: string[] = ["électrique", "diesel", "gazole","hybride"];
+  voituresUser: any;
+  energies: string[] = ["Electrique", "Diesel", "Essence","Hybride"];
 
 
   voiture = {
@@ -57,21 +58,23 @@ export class ProfilComponent {
     this.voiture.utilisateur_id = this.user?.id || 0; }
 
   ngOnInit() {
-    this.http.get<Marque[]>('api/profil/marqueGet').subscribe(
-      (data) => {
-        this.marque_existant = data;
+    forkJoin({
+      marques: this.http.get<Marque[]>('/api/Profil/marqueGet'),
+      roles: this.http.get<Role[]>('/api/Profil/roleGet'),
+      rolesUser: this.http.get<string[]>(`/api/Profil/roleUserGet/${this.user.id}`),
+      voiture: this.http.get<any[]>(`/api/Profil/voiture/${this.user.id}`)
+    }).subscribe({
+      next: ({ marques, roles, rolesUser, voiture }) => {
+        this.marque_existant = marques;
+        this.rolesDispo = roles;
+        this.rolesUser = rolesUser;
+        this.voituresUser = voiture.map(v => {
+          const m = this.marque_existant.find(x => x.id === v.marque_id);
+          return { ...v, marque_libelle: m ? m.libelle : 'Marque inconnue' };
+        });
+                
       },
-      (error) => {
-        console.error('Failed to load marque:', error);
-      }
-    );
-
-    this.http.get<Role[]>('/api/Profil/roleGet').subscribe(data => {
-      this.rolesDispo = data;
-    });
-
-    this.http.get<string[]>(`/api/Profil/roleUserGet/${this.user.id}`).subscribe(data => {
-      this.rolesUser = data;
+      error: (err) => console.error('Erreur chargement profil :', err)
     });
   }
 
@@ -94,7 +97,7 @@ export class ProfilComponent {
     }
 
     this.http.post('/api/Profil/roleSet', possede).subscribe({
-      next: () => { console.log('Rôles envoyés avec succès'); alert("Rôles sélectionné avec succès"); },
+      next: () => console.log('Rôles envoyés avec succès'),
       error: (err) => console.error('Erreur lors de l\'envoi des rôles', err)
     });
 
@@ -103,7 +106,7 @@ export class ProfilComponent {
       this.voiture.utilisateur_id = this.user.id;
 
       this.http.post('/api/Profil/voiture', this.voiture).subscribe({
-        next: () => { console.log("Voiture enregistrée"); alert("Voiture enregistrée"); },
+        next: () =>  console.log("Voiture enregistrée") ,
         error: (err) => console.error("Erreur voiture :", err)
       });
     };
@@ -127,6 +130,16 @@ export class ProfilComponent {
         enregistrerVoiture();
       }
     }
+    delay(3000);
+    this.recharger();
   }
 
+  recharger() {
+    this.http.get<any[]>(`/api/Profil/voiture/${this.user.id}`).subscribe(data => {
+      this.voituresUser = data.map(v => {
+        const m = this.marque_existant.find(x => x.id === v.marque_id);
+        return { ...v, marque_libelle: m?.libelle || 'Marque inconnue' };
+      });
+    });
+  }
 }

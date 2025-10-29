@@ -88,3 +88,32 @@ form {
     padding: 1rem;
   }
 }
+
+.table-utilisateurs {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  margin-top: 20px;
+}
+
+  .table-utilisateurs th,
+  .table-utilisateurs td {
+    border: 1px solid black;
+    padding: 8px;
+  }
+
+  .table-utilisateurs th {
+    background-color: #f2f2f2;
+  }
+
+.search-bar {
+  margin-bottom: 1rem;
+  text-align: right;
+}
+
+  .search-bar input {
+    padding: 6px;
+    font-size: 14px;
+    width: 250px;
+  }
+
