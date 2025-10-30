@@ -18,6 +18,28 @@ public class VoitureService
         using var connection = new MySqlConnection(_connectionString);
         await connection.OpenAsync();
 
+        // 1️ Vérifier si la voiture existe déjà
+        var checkCmd = new MySqlCommand(@"
+        SELECT COUNT(*) FROM voiture
+        WHERE immatriculation = @immatriculation
+          AND modele = @modele
+          AND date_premiere_immatriculation = @date_premiere_immatriculation
+          AND utilisateur_id = @utilisateur_id;", connection);
+
+        checkCmd.Parameters.AddWithValue("@immatriculation", voiture.Immatriculation);
+        checkCmd.Parameters.AddWithValue("@modele", voiture.Modele);
+        checkCmd.Parameters.AddWithValue("@date_premiere_immatriculation", voiture.Date_premiere_immatriculation);
+        checkCmd.Parameters.AddWithValue("@utilisateur_id", voiture.Utilisateur_id);
+
+        var existingCount = Convert.ToInt32(await checkCmd.ExecuteScalarAsync());
+
+        if (existingCount > 0)
+        {
+            // 2️ Déjà présente → on ne fait rien
+            return; 
+        }
+
+        // 3️ Sinon, on ajoute la nouvelle voiture
         var command = new MySqlCommand(@"
             INSERT INTO voiture (
                 modele, immatriculation, energie, couleur,
