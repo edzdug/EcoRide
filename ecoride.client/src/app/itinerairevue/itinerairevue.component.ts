@@ -81,15 +81,29 @@ export class ItinerairevueComponent implements OnInit {
     if (!this.form) return;
 
     this.filteredCovoiturages = this.covoiturages.filter((c) => {
-      const sameDepart = (c.lieuDepart || '').toLowerCase() === (this.form.depart || '').toLowerCase();
-      const sameDestination = (c.lieuArrivee || '').toLowerCase() === (this.form.destination || '').toLowerCase();
+      const depart = (c.lieuDepart || '').toLowerCase();
+      const arrivee = (c.lieuArrivee || '').toLowerCase();
+      const formDepart = (this.form.depart || '').toLowerCase();
+      const formDestination = (this.form.destination || '').toLowerCase();
+
+      // Correspondance souple : l’adresse contient la ville ou la ville contient une partie de l’adresse
+      const sameDepart =
+        depart.includes(formDepart) || formDepart.includes(depart);
+
+      const sameDestination =
+        arrivee.includes(formDestination) || formDestination.includes(arrivee);
 
       const cDate = new Date(c.dateDepart);
       const fDate = new Date(this.form.date);
-      const sameDate =
+
+      // ✅ On conserve uniquement la partie date (sans l’heure)
+      const sameDay =
         cDate.getFullYear() === fDate.getFullYear() &&
         cDate.getMonth() === fDate.getMonth() &&
         cDate.getDate() === fDate.getDate();
+
+      // ✅ Si la date est après le jour choisi, on le garde comme "futur"
+      const afterDate = cDate > fDate;
 
       // Énergie
       const matchEnergie =
@@ -120,7 +134,7 @@ export class ItinerairevueComponent implements OnInit {
       // Note
       const matchNote = !this.noteMinimale || (c.noteMinimale ?? 0) >= this.noteMinimale;
 
-      return sameDepart && sameDestination && sameDate && matchEnergie && matchPrix && dureeOk && matchNote;
+      return sameDepart && sameDestination && (sameDay || afterDate) && matchEnergie && matchPrix && dureeOk && matchNote;
     });
   }
 

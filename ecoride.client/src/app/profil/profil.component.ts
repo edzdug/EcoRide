@@ -108,7 +108,7 @@ export class ProfilComponent {
       this.http.post('/api/Profil/voiture', this.voiture).subscribe({
         next: (data) => {
           console.log("Voiture enregistrée");
-          if (data) this.message = "enregistrement de la voiture réussi";
+          if (data) this.message = "Enregistrement de la voiture réussi";
           else this.message = "Tentative d'insertion d'une immatriculation déjà existante";
         },
         error: (err) => console.error("Erreur voiture :", err)
