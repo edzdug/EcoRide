@@ -471,8 +471,8 @@ namespace EcoRide.Server.Controllers
         [HttpPost("voiture")]
         public async Task<IActionResult> AjouterVoiture([FromBody] Voiture voiture)
         {
-            await _voitureService.AjouterVoitureAsync(voiture);
-            return Ok();
+            bool result = await _voitureService.AjouterVoitureAsync(voiture);
+            return Ok(result);
         }
 
         // GET: /api/profil/voiture/{utilisateurId}

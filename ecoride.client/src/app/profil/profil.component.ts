@@ -35,7 +35,7 @@ export class ProfilComponent {
   public rolesUser: string[] = [];
   voituresUser: any;
   energies: string[] = ["Electrique", "Diesel", "Essence","Hybride"];
-
+  message: string | undefined;
 
   voiture = {
     modele: '',
@@ -106,7 +106,11 @@ export class ProfilComponent {
       this.voiture.utilisateur_id = this.user.id;
 
       this.http.post('/api/Profil/voiture', this.voiture).subscribe({
-        next: () =>  console.log("Voiture enregistrée") ,
+        next: (data) => {
+          console.log("Voiture enregistrée");
+          if (data) this.message = "enregistrement de la voiture réussi";
+          else this.message = "Tentative d'insertion d'une immatriculation déjà existante";
+        },
         error: (err) => console.error("Erreur voiture :", err)
       });
     };
