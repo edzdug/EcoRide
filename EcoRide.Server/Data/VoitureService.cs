@@ -13,7 +13,7 @@ public class VoitureService
         _connectionString = config.GetConnectionString("DefaultConnection");
     }
 
-    public async Task AjouterVoitureAsync(Voiture voiture)
+    public async Task<bool> AjouterVoitureAsync(Voiture voiture)
     {
         using var connection = new MySqlConnection(_connectionString);
         await connection.OpenAsync();
@@ -22,13 +22,9 @@ public class VoitureService
         var checkCmd = new MySqlCommand(@"
         SELECT COUNT(*) FROM voiture
         WHERE immatriculation = @immatriculation
-          AND modele = @modele
-          AND date_premiere_immatriculation = @date_premiere_immatriculation
           AND utilisateur_id = @utilisateur_id;", connection);
 
         checkCmd.Parameters.AddWithValue("@immatriculation", voiture.Immatriculation);
-        checkCmd.Parameters.AddWithValue("@modele", voiture.Modele);
-        checkCmd.Parameters.AddWithValue("@date_premiere_immatriculation", voiture.Date_premiere_immatriculation);
         checkCmd.Parameters.AddWithValue("@utilisateur_id", voiture.Utilisateur_id);
 
         var existingCount = Convert.ToInt32(await checkCmd.ExecuteScalarAsync());
@@ -36,7 +32,7 @@ public class VoitureService
         if (existingCount > 0)
         {
             // 2️ Déjà présente → on ne fait rien
-            return; 
+            return false; 
         }
 
         // 3️ Sinon, on ajoute la nouvelle voiture
@@ -62,6 +58,7 @@ public class VoitureService
         command.Parameters.AddWithValue("@preference", preferenceJson);
 
         await command.ExecuteNonQueryAsync();
+        return true;
     }
 
     public async Task<List<Voiture>> GetVoituresByUtilisateurIdAsync(int utilisateurId)

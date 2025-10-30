@@ -18,7 +18,7 @@
       </tr>
       <tr *ngFor="let voiture of voituresUser">
         <td>voiture</td>
-        <td>Modèle : {{voiture.modele | titlecase}}; Energie : {{voiture.energie | titlecase}}; Marque : {{voiture.marque_libelle | titlecase}}; </td>
+        <td>Modèle : {{voiture.modele | titlecase}}; Energie : {{voiture.energie | titlecase}}; Marque : {{voiture.marque_libelle | titlecase}}; Immatriculation : {{voiture.immatriculation | titlecase}}; </td>
       </tr>
     </tbody>
   </table>
@@ -98,4 +98,8 @@
   <br />
   <br />
   <button type="submit" [disabled]="profilForm.invalid">Valider</button>
+  <div *ngIf="isChauffeur">
+    <br />
+    <h2 *ngIf="message != undefined">{{message}}</h2>
+  </div>
 </form>
