@@ -135,13 +135,13 @@ export class SaisieCovoiturageComponent implements OnInit {
 
     this.http.post(`/api/Covoiturage/Ajouter?utilisateurId=${this.utilisateurId}`, covoiturage, { responseType: 'text' }).subscribe({
       next: (res) => {
-        this.message = res;  // Affiche le message texte retourné par l'API
+        this.message = "Covoiturage ajouté avec succès";  
         this.covoiturageForm.reset();
         this.loading = false;
       },
       error: (err) => {
         console.error("Erreur lors de l'envoi :", err);
-        this.message = `Erreur lors de l'envoi du covoiturage : ${err.message || err.statusText}`;
+        this.message = `Erreur lors de l'envoi du covoiturage`;
         this.loading = false;
       }
     });
