@@ -17,7 +17,7 @@
     <p><strong>Date d'arrivée :</strong> {{ covoiturageDetail.covoiturage.dateArrivee | date:'shortDate' }}</p>
     <p><strong>Heure Arrivée :</strong> {{ covoiturageDetail.covoiturage.heureArrivee }}</p>
     <p><strong>Nombre de place :</strong> {{ covoiturageDetail.covoiturage.nbPlace }}</p>
-    <p><strong>Prix :</strong> {{ covoiturageDetail.covoiturage.prixPersonne }} €</p>
+    <p><strong>Prix :</strong> {{ covoiturageDetail.covoiturage.prixPersonne }} Crédits</p>
     <p><strong>Écologique :</strong> {{ ['électrique', 'hybride'].includes((covoiturageDetail.covoiturage.energie || '').toLowerCase()) ? 'Oui' : 'Non' }}</p>
 
     <h3>🚗 Véhicule</h3>
