@@ -49,6 +49,7 @@ export class SaisieAvisComponent {
       .subscribe({
         next: () => {
           alert('Avis envoyé avec succès !');
+          this.router.navigate([`/historique/${this.utilisateurId}`]);
         },
         error: (err) => {
           console.error('Erreur lors de l\'envoi de l\'avis :', err);

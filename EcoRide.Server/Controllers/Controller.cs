@@ -114,13 +114,13 @@ namespace EcoRide.Server.Controllers
                 return NotFound("Utilisateur ou trajet introuvable.");
 
             if (covoiturage.NbPlace <= 0)
-                return BadRequest("Plus de places disponibles.");
+                return BadRequest("Il ne reste plus de places disponible pour ce trajet.");
 
             if (credit < covoiturage.PrixPersonne)
-                return BadRequest("Crédit insuffisant.");
+                return BadRequest("Vos crédit sont insuffisant.");
 
             if (await _serviceParticipation.ExisteParticipationAsync(request.UtilisateurId, request.CovoiturageId))
-                return BadRequest("Déjà inscrit à ce covoiturage.");
+                return BadRequest("Vous êtes déjà inscrit à ce covoiturage.");
 
             // Enregistrement
             await _serviceParticipation.AjouterParticipationAsync(request.UtilisateurId, request.CovoiturageId);
@@ -261,7 +261,7 @@ namespace EcoRide.Server.Controllers
                     return NotFound($"Covoiturage avec l'ID {covoiturageId} non trouvé.");
 
                 // Mise à jour du statut
-                await _service.updateStateCovoiturage(covoiturageId, "arriver");
+                await _service.updateStateCovoiturage(covoiturageId, "arrivé");
                 await _emailService.EnvoyerEmailRetourAvisAsync(covoiturageId);
 
                 return Ok(new { message = "Covoiturage arrivé avec succès." });

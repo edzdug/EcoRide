@@ -314,7 +314,7 @@ public class CovoiturageService
             // 3. Mettre à jour le statut du covoiturage
             var updateStatusCommand = new MySqlCommand(@"
             UPDATE covoiturage 
-            SET statut = 'annuler' 
+            SET statut = 'annulé' 
             WHERE covoiturage_id = @covoiturageId;",
                 connection, (MySqlTransaction)transaction);
 

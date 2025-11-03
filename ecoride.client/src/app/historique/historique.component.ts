@@ -95,7 +95,7 @@ export class HistoriqueComponent {
     this.http.post(`/api/Covoiturage/Arriver`, covoiturage.id).subscribe({
       next: () => {
         console.log('Statut mis à jour : covoiturage arrivé');
-        covoiturage.statut = 'arriver';
+        covoiturage.statut = 'arrivé';
       },
       error: (err) => console.error('Erreur lors de la mise à jour', err)
     });
