@@ -2,18 +2,17 @@
 
 # Application de Covoiturage – Guide d’installation & Déploiement en local
 
-Ce document explique **toutes les étapes nécessaires** pour installer et exécuter l’application de covoiturage en local, aussi bien pour la partie **front-end Angular** que la partie **back-end (API Node.js / Java / PHP selon ton projet)** ainsi que la **base de données MySQL**.
+Ce document détaille la procédure complète pour installer et exécuter l’application de covoiturage **en local**, tout en utilisant **la base de données distante hébergée sur Azure**.
 
 ---
 
 ## 1. Prérequis
 
-Avant de démarrer, assurez-vous d’avoir installé les outils suivants :
+Avant de lancer l’application, installez les outils suivants :
 
 ### **Front-end**
 
-* Node.js (version 18+ recommandée)
-  [https://nodejs.org](https://nodejs.org)
+* Node.js : [https://nodejs.org](https://nodejs.org)
 * Angular CLI :
 
   ```bash
@@ -22,77 +21,77 @@ Avant de démarrer, assurez-vous d’avoir installé les outils suivants :
 
 ### **Back-end**
 
-Selon la technologie utilisée (adapter si besoin) :
+Selon la technologie utilisée :
 
-* **PHP 8+** + XAMPP/WAMP
-  OU
-* **Node.js (Express)**
-  OU
-* **Java Spring Boot**
+* PHP 8+ (XAMPP/WAMP), ou
+* Node.js + Express, ou
+* Java Spring Boot
 
-### **Base de données**
+*(Adapter selon ton projet)*
 
-* MySQL 8+
-* PhpMyAdmin / Adminer (optionnel)
-
-### **Outils recommandés**
+### Outils recommandés :
 
 * Visual Studio Code
 * Git
-* Postman (pour tester l'API)
+* Postman (pour tester l’API)
 
 ---
 
-## 2. Installation de la base de données
+## 2. Base de données (hébergée sur Azure)
 
-1. Créez une base de données MySQL :
+Votre application utilise une **base de données MySQL distante**, déjà déployée sur **Azure Database for MySQL**.
+Aucune importation SQL n’est nécessaire.
 
-   ```sql
-   CREATE DATABASE covoiturage CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-   ```
+### 🔐 Informations nécessaires à configurer (exemple Azure) :
 
-2. Importez le script SQL fourni dans le dossier `/sql` :
+* **Host** : `myc-bdd-mysql.mysql.database.azure.com`
+* **Port** : `3306`
+* **User** : `amarcelle@myc-bdd-mysql`
+* **Password** : `aON8hSy_GeS`
+* **Database** : `ecoride`
 
-   * Via PhpMyAdmin → Importer
-   * Ou via la ligne de commande :
-
-     ```bash
-     mysql -u root -p covoiturage < database.sql
-     ```
-
-3. Vérifiez que toutes les tables ont bien été créées (utilisateur, voiture, covoiturage, avis, participation, etc.).
+⚠️ *Ces valeurs doivent être adaptées selon votre configuration Azure.*
 
 ---
 
 ## 3. Installation du Back-End
 
-### Si votre projet utilise **PHP** (API en MVC)
+1. Ouvrez le dossier du back-end :
 
-1. Placez les fichiers du back-end dans le dossier :
+   ```bash
+   cd backend
+   ```
 
-   ```
-   /xampp/htdocs/covoiturage-api
-   ```
-2. Configurez le fichier `config.php` :
+2. Configurez la connexion Azure dans votre fichier de configuration :
 
-   ```php
-   $dbHost = "localhost";
-   $dbUser = "root";
-   $dbPass = "";
-   $dbName = "covoiturage";
-   ```
-3. Lancez Apache + MySQL via XAMPP.
-4. L’API est accessible à :
+### Exemple PHP (config.php)
 
-   ```
-   http://localhost/covoiturage-api/
-   ```
+```php
+$host = "myc-bdd-mysql.mysql.database.azure.com";
+$user = "amarcelle@myc-bdd-mysql";
+$password = "aON8hSy_GeS";
+$dbname = "ecoride";
+```
+
+3. Lancez votre serveur local :
+
+* Apache (XAMPP/WAMP) pour un back-end PHP
+* `npm start` pour Node.js
+* `mvn spring-boot:run` pour Spring Boot
+
+4. L’API est accessible localement (exemples) :
+
+```
+http://localhost/covoiturage-api/
+http://localhost:3000/api
+http://localhost:8080/api
+```
 
 ---
 
 ## 4. Installation du Front-End Angular
 
-1. Ouvrez un terminal dans le dossier du front-end :
+1. Ouvrez le projet Angular :
 
    ```bash
    cd front
@@ -104,120 +103,91 @@ Selon la technologie utilisée (adapter si besoin) :
    npm install
    ```
 
-3. Configurez l’URL de l’API dans `environment.ts` :
+3. Configurez l’URL de l’API dans `src/environments/environment.ts` :
 
    ```ts
    export const environment = {
-     apiUrl: 'http://localhost/covoiturage-api/'
+     apiUrl: 'http://localhost:3000/api'  // ou Apache, ou Spring Boot
    };
    ```
 
-4. Lancez l’application Angular :
+4. Lancez Angular :
 
    ```bash
    ng serve
    ```
 
-5. Accédez à l’application dans votre navigateur :
+5. Ouvrez l’application :
 
-   ```
-   http://localhost:4200/
-   ```
+```
+http://localhost:4200/
+```
 
 ---
 
-## 5. Tests de fonctionnement
+## 5. Tests
 
-### Tester l'API
+### API
 
-Utilisez Postman pour vérifier :
+Utiliser Postman pour tester :
 
-* Authentification
-* Création d’un covoiturage
-* Liste des trajets
-* Ajout d’un avis
+* Connexion utilisateur
+* Création de covoiturage
+* Participation
+* Ajout d’avis
 
-### Tester le front-end
+### Front
 
-* Formulaire d’inscription
-* Tableau de bord utilisateur
-* Filtrage des covoiturages
-* Réservation / participation
+Vérifier :
+
+* Formulaires
+* Filtrage des trajets
 * Gestion du profil
+* Réservation
 
 ---
 
 ## 6. Problèmes courants & solutions
 
-| Problème                            | Solution                                    |
-| ----------------------------------- | ------------------------------------------- |
-| Angular affiche une erreur CORS     | Activer CORS sur le back-end                |
-| “ER_ACCESS_DENIED_ERROR” dans l’API | Vérifier identifiants MySQL                 |
-| API retourne un JSON vide           | Vérifier l’URL dans `environment.ts`        |
-| Angular ne compile pas              | Supprimer `node_modules` puis `npm install` |
+| Problème              | Solution                                              |
+| --------------------- | ----------------------------------------------------- |
+| Erreur SSL Azure      | Activer "SSL required = true" dans la connexion MySQL |
+| ECACCESS DENIED Azure | Vérifier firewall Azure (ajouter son IP)              |
+| Angular → API : CORS  | Activer CORS dans le back-end                         |
+| Temps de réponse lent | Optimiser les requêtes MySQL                          |
 
 ---
 
 ## 7. Comptes utilisateurs de test
 
-| Rôle           | Email            | Mot de passe |
-| -------------- | ---------------- | ------------ |
-| Administrateur | [admin@sfr.fr]   | admin123!    |
-| Utilisateur    | [test@test.com]  | user123!     |
-
-
+| Rôle        | Email             | Mot de passe  |
+| ----------- | ----------------- | ------------- |
+| Admin       | [admin@sfr.fr]    | Admin123!     |
+| Utilisateur | [test@test.com]   | user123       |
 
 ---
 
-## 📦 8. Commandes utiles
+## 8. Commandes utiles
 
-### Angular
+### Général
 
 ```bash
-ng serve
-ng build
+git clone <url>
 npm install
+ng serve
 ```
 
-### Git
+### API Node.js
 
 ```bash
-git clone https://github.com/edzdug/EcoRide.git
-git pull
-git add .
-git commit -m "update"
-git push
+npm start
 ```
 
 ---
 
-## 📚 9. Structure du projet
+## 9. Informations
 
-```
-/backend
-   /controllers
-   /models
-   /services
-   config.php
-   index.php
-
-/front
-   /src
-     /app
-       components/
-     index.html
-     environment.ts
-
-/sql
-   database.sql
-```
-
----
-
-## 🎯 10. Auteur & informations
-
-Projet réalisé dans le cadre d’un travail académique.
+Projet académique 2024–2025
 Développé par : **MARCELLE Allan**
-Année : **2024 – 2025**
 
 
