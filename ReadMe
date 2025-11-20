@@ -182,7 +182,7 @@ npm install
 ### Git
 
 ```bash
-git clone <url>
+git clone https://github.com/edzdug/EcoRide.git
 git pull
 git add .
 git commit -m "update"
