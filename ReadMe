@@ -1,0 +1,223 @@
+# **README.md**
+
+# Application de Covoiturage – Guide d’installation & Déploiement en local
+
+Ce document explique **toutes les étapes nécessaires** pour installer et exécuter l’application de covoiturage en local, aussi bien pour la partie **front-end Angular** que la partie **back-end (API Node.js / Java / PHP selon ton projet)** ainsi que la **base de données MySQL**.
+
+---
+
+## 1. Prérequis
+
+Avant de démarrer, assurez-vous d’avoir installé les outils suivants :
+
+### **Front-end**
+
+* Node.js (version 18+ recommandée)
+  [https://nodejs.org](https://nodejs.org)
+* Angular CLI :
+
+  ```bash
+  npm install -g @angular/cli
+  ```
+
+### **Back-end**
+
+Selon la technologie utilisée (adapter si besoin) :
+
+* **PHP 8+** + XAMPP/WAMP
+  OU
+* **Node.js (Express)**
+  OU
+* **Java Spring Boot**
+
+### **Base de données**
+
+* MySQL 8+
+* PhpMyAdmin / Adminer (optionnel)
+
+### **Outils recommandés**
+
+* Visual Studio Code
+* Git
+* Postman (pour tester l'API)
+
+---
+
+## 2. Installation de la base de données
+
+1. Créez une base de données MySQL :
+
+   ```sql
+   CREATE DATABASE covoiturage CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+   ```
+
+2. Importez le script SQL fourni dans le dossier `/sql` :
+
+   * Via PhpMyAdmin → Importer
+   * Ou via la ligne de commande :
+
+     ```bash
+     mysql -u root -p covoiturage < database.sql
+     ```
+
+3. Vérifiez que toutes les tables ont bien été créées (utilisateur, voiture, covoiturage, avis, participation, etc.).
+
+---
+
+## 3. Installation du Back-End
+
+### Si votre projet utilise **PHP** (API en MVC)
+
+1. Placez les fichiers du back-end dans le dossier :
+
+   ```
+   /xampp/htdocs/covoiturage-api
+   ```
+2. Configurez le fichier `config.php` :
+
+   ```php
+   $dbHost = "localhost";
+   $dbUser = "root";
+   $dbPass = "";
+   $dbName = "covoiturage";
+   ```
+3. Lancez Apache + MySQL via XAMPP.
+4. L’API est accessible à :
+
+   ```
+   http://localhost/covoiturage-api/
+   ```
+
+---
+
+## 4. Installation du Front-End Angular
+
+1. Ouvrez un terminal dans le dossier du front-end :
+
+   ```bash
+   cd front
+   ```
+
+2. Installez les dépendances :
+
+   ```bash
+   npm install
+   ```
+
+3. Configurez l’URL de l’API dans `environment.ts` :
+
+   ```ts
+   export const environment = {
+     apiUrl: 'http://localhost/covoiturage-api/'
+   };
+   ```
+
+4. Lancez l’application Angular :
+
+   ```bash
+   ng serve
+   ```
+
+5. Accédez à l’application dans votre navigateur :
+
+   ```
+   http://localhost:4200/
+   ```
+
+---
+
+## 5. Tests de fonctionnement
+
+### Tester l'API
+
+Utilisez Postman pour vérifier :
+
+* Authentification
+* Création d’un covoiturage
+* Liste des trajets
+* Ajout d’un avis
+
+### Tester le front-end
+
+* Formulaire d’inscription
+* Tableau de bord utilisateur
+* Filtrage des covoiturages
+* Réservation / participation
+* Gestion du profil
+
+---
+
+## 6. Problèmes courants & solutions
+
+| Problème                            | Solution                                    |
+| ----------------------------------- | ------------------------------------------- |
+| Angular affiche une erreur CORS     | Activer CORS sur le back-end                |
+| “ER_ACCESS_DENIED_ERROR” dans l’API | Vérifier identifiants MySQL                 |
+| API retourne un JSON vide           | Vérifier l’URL dans `environment.ts`        |
+| Angular ne compile pas              | Supprimer `node_modules` puis `npm install` |
+
+---
+
+## 7. Comptes utilisateurs de test
+
+| Rôle           | Email            | Mot de passe |
+| -------------- | ---------------- | ------------ |
+| Administrateur | [admin@sfr.fr]   | admin123!    |
+| Utilisateur    | [test@test.com]  | user123!     |
+
+
+
+---
+
+## 📦 8. Commandes utiles
+
+### Angular
+
+```bash
+ng serve
+ng build
+npm install
+```
+
+### Git
+
+```bash
+git clone <url>
+git pull
+git add .
+git commit -m "update"
+git push
+```
+
+---
+
+## 📚 9. Structure du projet
+
+```
+/backend
+   /controllers
+   /models
+   /services
+   config.php
+   index.php
+
+/front
+   /src
+     /app
+       components/
+     index.html
+     environment.ts
+
+/sql
+   database.sql
+```
+
+---
+
+## 🎯 10. Auteur & informations
+
+Projet réalisé dans le cadre d’un travail académique.
+Développé par : **MARCELLE Allan**
+Année : **2024 – 2025**
+
+
